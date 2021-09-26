@@ -1,0 +1,197 @@
+{
+  "name": "English",
+  "localized_name": "English",
+  "commands": {
+    "about": {
+      "exports": {
+        "description": "About the bot",
+        "usage": "about"
+      },
+      "about": "About Obot-ma",
+      "version": "Version",
+      "authers": "Authers",
+      "uptime": "Uptime",
+      "description": "The bot for the discord of JCIgaming"
+    },
+    "block": {
+      "exports": {
+        "description": "Block someone from using commands",
+        "usage": "block <user> [admin block (ture,false)]"
+      },
+      "ownerBlock": "awww you silly goose!!!! only my owner is able to admin block someone!!!!",
+      "alreadyBlocked": "uwu i already found this user in my database along with ur long-",
+      "nowBlocked": "daddy i blocked <@%0>!!!! now pwease punch me!!!!!!!",
+      "noMention0": "who tf do you want me to block?",
+      "noMention1": "haha very funni but pleae specify a user by mentioning him/her/they/them/fuck me"
+    },
+    "changelog": {
+      "exports": {
+        "description": "Display the changelog.",
+        "usage": "changelog"
+      },
+      "title": "Changelog"
+    },
+    "eval": {
+      "exports": {
+        "description": "Does some JS shit.",
+        "usage": "eval <code>"
+      },
+      "start": "Starting EVAL! :gear:",
+      "noperms": "u think that im that stopid?",
+      "fileError": "bruh return was prob over 8mb... bruv wtf were u doing?????",
+      "fileMsg": "The eval return vaule could not be displayed because the eval return vaule was over 1024 characters! Im going to send the return as its own file!"
+    },
+    "help": {
+      "exports": {
+        "description": "Gives a list of commands available in the bot.",
+        "usage": "help [command]"
+      },
+      "none": "*none*",
+      "description": "Description",
+      "category": "Category",
+      "usage": "Usage",
+      "permissions": "Permissions",
+      "cooldown": "Cooldown",
+      "seconds": " Second(s)",
+      "aliases": "Aliases",
+      "helptext": "`[]` means optional and `<>` is required. The bot prefix is `%0`",
+      "helpmenucmd": "Commands",
+      "error": "An error has occured. It has been logged to fix it.",
+      "nocommand": "Specifed command does not exist.",
+      "helpmenuspcmd": "Help For Specific Commands",
+      "helpmenuspbody": "To get help for any command, do `%0help [command name]`"
+    },
+    "language": {
+      "exports": {
+        "description": "Change the language of the bot.",
+        "usage": "language <lang code like \"de\" for german or \"en\" for english>"
+      },
+      "noargs": "Please specify the new language",
+      "nolang": "No localization found for %0",
+      "langchanged": "Language changed to `%0/%1`!"
+    },
+    "memory": {
+      "exports": {
+        "description": "Gives you the used memor.",
+        "usage": "memory"
+      }
+    },
+    "ping": {
+      "exports": {
+        "description": "Gives you the bot ping.",
+        "usage": "ping"
+      },
+      "ping": "〽️ Pinging",
+      "title": "Pong! :ping_pong:",
+      "field1": "Ping:",
+      "ms": "ms",
+      "uptime": "Uptime:",
+      "uptimemsg": "%0d %1h %2m %3m %4s"
+    },
+    "reload": {
+      "exports": {
+        "description": "Does some JS shit, mostly reloading",
+        "usage": "reload"
+      },
+      "clear": "Clearing chache... Pray that nothing breaks.",
+      "done": "yeah we done",
+      "noperms": "u think that im that stopid?"
+    },
+    "setprefix": {
+      "exports": {
+        "description": "Sets the prefix for the server!",
+        "usage": "prefix <new prefix>"
+      },
+      "error": "Error",
+      "errormsg": "The new prefix can't be over 100 characters.",
+      "noargs": "Please specify the new prefix!",
+      "done": "Done :clap:",
+      "donemsg": "The command prefix on `%0` is now `%1`!"
+    },
+    "shutdown": {
+      "exports": {
+        "description": "Shuts the bot down.",
+        "usage": "shutdown"
+      },
+      "noperms": "You do not have the Permission to execute this command!"
+    },
+    "unblock": {
+      "exports": {
+        "description": "Unblock someone.",
+        "usage": "unblock <user>"
+      },
+      "noargs": "who tf should i unnlock?",
+      "noargsping": "haha very funni but pleae specify a user by mentioning him/her",
+      "noblock": "uwu i couldn't find that user in my config files",
+      "adminblock": "That user is admin blocked and you are not my owner so i cant unblock that user",
+      "succ": "daddy i unblocked %0!!!! now pwease punch me!!!!!!!"
+    }
+  },
+  "slashcommands": {
+    "getwarns": {
+      "noperms": "You don't have the required Permissions to execute this command.",
+      "title": "Warns for `%0`",
+      "nowarns": "This person has no warns.",
+      "invalidsteamid": "Please provide a valid ID.",
+      "pointsT": "Current points",
+      "pointsN": "All points,",
+      "page": "Page %0 of %1",
+      "nobuttons": "<@%0>, you can't use this Button.",
+      "numberplease": "<@%0>, please provide a number.",
+      "newsite": "<@%0>, please type in the new page.",
+      "expired": "**__This warn is expired!__**\n",
+      "extra": "Extra: **%0**\n",
+      "fieldTitle": "Warn %0",
+      "fieldBody": "%0Reason: **%1**\n%6Points: **%2**\nModerator: <@%3> (%4)\nID: %5%7"
+    },
+    "getwarn": {
+      "wait": "Please wait...",
+      "notfound": "No warn found under `%0`"
+    },
+    "addwarn": {
+      "invalidsteamid": "Please provide a valid ID."
+    },
+    "deletewarn": {
+      "nowarn": "No warn found under `%0`.",
+      "usure": "Do you really want to delete the warn for `%0`?",
+      "description": "This warn was %0.",
+      "footer": "ID: %0",
+      "field1t": "Name:",
+      "field1": "*%0*",
+      "field2t": "ID:",
+      "field2": "*%0%1*",
+      "field3t": "Reason:",
+      "field3": "*%0*",
+      "field4t": "Points:",
+      "field4": "*%0*",
+      "field5t": "Moderator:",
+      "field5": "<@%0> (%1)",
+      "field6t": "Extra:",
+      "field6": "*%0*",
+      "nobuttons": "<@%0>, you can't use these buttons.",
+      "cancel": "Warn deletion canceled."
+    }
+  },
+  "eventhandlers": {
+    "commandMessage": {
+      "error": "An unexpected error has occured. Please contact the bot owner (Simyon#6969)",
+      "cooldown": "You're using **%0** too quickly. Wait another **%1** seconds to use this command again.",
+      "permsErrT": "Error",
+      "permsErr": "You are missing the permission: `%0`",
+      "commandErrorT": "",
+      "commandError": "An error occured!"
+    },
+    "interactions": {
+      "nofile": "This Command has no file to execute.",
+      "err": "There was an error while executing the command."
+    },
+    "warnMessage": {
+      "extra": " *This person has more then 4 points. You can ban this Person now.*",
+      "notvalid": "Please write a formal warn.",
+      "nowarns": "This Person doesn't have any warns yet.",
+      "invalidsteamid": "Please provide a valid ID.",
+      "pointsm": "%0 now has %1 Points. Current points are %2.%3",
+      "pointss": "%0 now has %1 Point. Current points are %2 Punkte."
+    }
+  }
+}

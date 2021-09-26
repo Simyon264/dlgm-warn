@@ -1,0 +1,17 @@
+{
+  "name": "dlgmwarn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "keywords": [],
+  "author": "Simyon, Joshua zacek",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "@discordjs/builders": "^0.6.0",
+    "colours": "^0.6.0-2",
+    "discord.js": "^13.0.1"
+  }
+}

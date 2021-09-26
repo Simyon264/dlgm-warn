@@ -1,0 +1,203 @@
+{
+  "name": "German",
+  "localized_name": "Deutsch",
+  "commands": {
+    "about": {
+      "exports": {
+        "description": "Über den Bot.",
+        "usage": "about"
+      },
+      "about": "Über das Warn System.",
+      "version": "Version",
+      "authers": "Autoren",
+      "uptime": "Uptime",
+      "description": "Der Bot fürs DLGM-Warn-System"
+    },
+    "block": {
+      "exports": {
+        "description": "Blockiere jemanden vom Bot. Diese Person kann dann keine Befehle mehr nutzen.",
+        "usage": "block <benutzer> [admin block (ture,false)]"
+      },
+      "ownerBlock": "Nur der Botbeisitzer kann jemanden Adminblockieren.",
+      "alreadyBlocked": "Dieser Nutzer ist bereits blockiert.",
+      "nowBlocked": "<@%0> wurde geblockt.",
+      "noMention0": "Wen soll ich blockieren?",
+      "noMention1": "Wen soll ich blockieren?"
+    },
+    "changelog": {
+      "exports": {
+        "description": "Zeigt dir den changelog.",
+        "usage": "changelog"
+      },
+      "title": "Changelog"
+    },
+    "eval": {
+      "exports": {
+        "description": "Macht irgendein JS schieß.",
+        "usage": "eval <code>"
+      },
+      "start": "Starte EVAL! :gear:",
+      "noperms": "Nur der Bot besitzer kann diesen Befehl ausführen.",
+      "fileError": "Return war über 8mb. Was hast du gemacht?",
+      "fileMsg": "EVAL-Ergebnis war über 1024 Zeichen."
+    },
+    "getwarn": {
+      "exports": {
+        "description": "Zeigt dir eine Verwarnung an mit einer ID.",
+        "usage": "getwarn <id>"
+      }
+    },
+    "help": {
+      "exports": {
+        "description": "Zeigt dir alle Befehle.",
+        "usage": "help [befehl]"
+      },
+      "none": "*nichts*",
+      "description": "Beschreibung",
+      "category": "Kategorie",
+      "usage": "Benutzung",
+      "permissions": "Rechte",
+      "cooldown": "Cooldown",
+      "seconds": " Sekunde(n)",
+      "aliases": "Aliases",
+      "helptext": "`[]` heißt es ist Optional, `<>` ist benötigt. Der bot prefix ist `%0`",
+      "helpmenucmd": "Befehle",
+      "error": "Ein Fehler ist aufgetreten.",
+      "nocommand": "Befehl nicht gefunden.",
+      "helpmenuspcmd": "Hilfe für speziale Befehle.",
+      "helpmenuspbody": "Um Hilfe für einen Befehl zu bekommen, mach `%0help <Befehl name>`."
+    },
+    "language": {
+      "exports": {
+        "description": "Ändere die Sprache vom Bot.",
+        "usage": "language <lang code like \"de\" for german or \"en\" for english>"
+      },
+      "noargs": "Bitte die neue Sprache definieren.",
+      "nolang": "Keine Sprache unter %0 gefunden.",
+      "langchanged": "Sprache geändert zu `%0/%1`!"
+    },
+    "memory": {
+      "exports": {
+        "description": "Zeigt dir die RAM-Nutzung vom Bot an.",
+        "usage": "memory"
+      }
+    },
+    "ping": {
+      "exports": {
+        "description": "Zeigt dir den Bot ping und uptime an.",
+        "usage": "ping"
+      },
+      "ping": "〽️ Pinge...",
+      "title": "Pong! :ping_pong:",
+      "field1": "Ping:",
+      "ms": "ms",
+      "uptime": "Uptime:",
+      "uptimemsg": "%0d %1h %2m %3s"
+    },
+    "reload": {
+      "exports": {
+        "description": "Ladet den Bot zum größtenteil neu.",
+        "usage": "reload"
+      },
+      "clear": "Clearing chache... Pray that nothing breaks.",
+      "done": "yeah we done",
+      "noperms": "Du hast keine Berechtigung um diesen Befehl auszuführen."
+    },
+    "setprefix": {
+      "exports": {
+        "description": "Defieniere einen Neuen Bot preifx.",
+        "usage": "prefix <neuer prefix>"
+      },
+      "error": "Fehler",
+      "errormsg": "Der neue Prefix darf nicht über 100 Zeichen sein.",
+      "noargs": "Bitte defienire den neuen Prefix.",
+      "done": "Fertig :clap:",
+      "donemsg": "Der Bot Preifx ist jetzt `%1`!"
+    },
+    "shutdown": {
+      "exports": {
+        "description": "Fährt den Bot herunter.",
+        "usage": "shutdown"
+      },
+      "noperms": "Du hast keine Berechtigung um diesen Befehl auszuführen."
+    },
+    "unblock": {
+      "exports": {
+        "description": "Entblockiere jemanden.",
+        "usage": "unblock <@benutzer>"
+      },
+      "noargs": "Wen soll ich entblocken?",
+      "noargsping": "Wen soll ich entblocken?",
+      "noblock": "Dieser Nutzer ist nicht blockiert.",
+      "adminblock": "Dieser Nutzer ist Admin-Blockiert und du hast nicht die Rechte um die Person zu Entblocken.",
+      "succ": "`%0` ist jetzt Entblockiert."
+    }
+  },
+  "slashcommands": {
+    "getwarns": {
+      "noperms": "Du hast keine Berechtigung um diesen Befehl auszuführen.",
+      "title": "Verwarnungen von `%0`",
+      "nowarns": "Diese Person hat noch keine Verwarnungen.",
+      "invalidsteamid": "Bitte gebe ein valide id an.",
+      "pointsT": "Akutelle Punkte",
+      "pointsN": "Alle Punkte",
+      "page": "Seite %0 von %1",
+      "nobuttons": "<@%0>, du kannst diese Knöpfe nicht nutzen.",
+      "numberplease": "<@%0>, bitte gebe eine Nummer ein.",
+      "newsite": "<@%0>, bitte gebe eine neue Seite an.",
+      "expired": "**__Diese Verwarnung ist abgelaufen!__**\n",
+      "extra": "Extra: **%0**\n",
+      "fieldTitle": "Verwarnung %0",
+      "fieldBody": "%0Grund: **%1**\n%6Punkte: **%2**\nModerator: <@%3> (%4)\nID: %5%7"
+    },
+    "getwarn": {
+      "wait": "Bitte warten...",
+      "notfound": "Keine Verwarnung gefunden unter `%0`"
+    },
+    "addwarn": {
+      "invalidsteamid": "Bitte gebe ein valide ID an."
+    },
+    "deletewarn": {
+      "nowarn": "Keine Verwarnung gefunden unter `%0`.",
+      "usure": "Möchtest du die Verwarnung für `%0` wirklich löschen?",
+      "description": "Diese Verwarnung war %0.",
+      "footer": "ID: %0",
+      "field1t": "Name:",
+      "field1": "*%0*",
+      "field2t": "ID:",
+      "field2": "*%0%1*",
+      "field3t": "Grund:",
+      "field3": "*%0*",
+      "field4t": "Punkte:",
+      "field4": "*%0*",
+      "field5t": "Moderator:",
+      "field5": "<@%0> (%1)",
+      "field6t": "Extra:",
+      "field6": "*%0*",
+      "nobuttons": "<@%0>, du kannst diese Knöpfe nicht nutzen.",
+      "cancel": "Verwarnungslöschung abgebrochen."
+    }
+  },
+  "eventhandlers": {
+    "commandMessage": {
+      "error": "Ein Fehler ist aufgetreten, der Bot-Besitzer wird sich darum kümmern.",
+      "cooldown": "Du nutzt **%0** zu schnell. Warte noch **%1** Sekunden um diesen Befehl wieder nutzen zu können.",
+      "permsErrT": "Fehler",
+      "permsErr": "Dir fehlt das Recht: `%0`",
+      "commandErrorT": "",
+      "commandError": "Ein Fehler ist aufgetreten."
+    },
+    "interactions": {
+      "nofile": "Dieser Befehl hat keine Datei zum ausführen.",
+      "err": "Ein Fehler ist aufgetreten, der Bot-Besitzer wird sich darum kümmern."
+    },
+    "warnMessage": {
+      "extra": " *Diese Person hat 4 oder mehr Punkte, du kannst diese Person jetzt Bannen.*",
+      "notvalid": "Bitte schreibe ein richtige Verwarnung.",
+      "nowarns": "Diese Person hat noch keine Verwarnungen.",
+      "invalidsteamid": "Bitte gebe ein valide ID an.",
+      "pointsm": "%0 hat jetzt %1 Punkte. Insgesamt %2 Punkte.%3",
+      "pointss": "%0 hat jetzt %1 Punkt. Insgesamt %2 Punkte."
+    }
+  }
+}

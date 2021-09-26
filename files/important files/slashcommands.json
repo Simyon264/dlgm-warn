@@ -1,0 +1,97 @@
+[
+  {
+    "name": "deletewarn",
+    "description": "Lösche eine Verwarnung vom System.",
+    "options": [
+      {
+        "name": "warnid",
+        "type": "INTEGER",
+        "description": "Die ID vom Warn den du löschen möchtest.",
+        "required": true
+      }
+    ]
+  },
+  {
+    "name": "addwarn",
+    "description": "Füge eine Verwarnung zu einem Benutzer hinzu.",
+    "options": [
+      {
+        "name": "name",
+        "type": "STRING",
+        "description": "Der Name von der Person der du ein Warn geben willst.",
+        "required": true
+      },
+      {
+        "name": "steamid",
+        "type": "STRING",
+        "description": "Die id von der Person der du ein Warn geben willst.",
+        "required": true
+      },
+      {
+        "name": "grund",
+        "type": "STRING",
+        "description": "Der Grund von der Person der du ein Warn geben willst.",
+        "required": true
+      },
+      {
+        "name": "punkte",
+        "type": "INTEGER",
+        "description": "Die Punkte die du der Person geben willst.",
+        "required": true
+      },
+      {
+        "name": "extra",
+        "type": "STRING",
+        "description": "Falls du etwas extra sagen willst.",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "getwarns",
+    "description": "Zeigt dir die Warns von einer der bestimmten Person an.",
+    "options": [
+      {
+        "name": "steamid",
+        "type": "STRING",
+        "description": "Die id von der Person von der du die Verwarnungen bekommen willst.",
+        "required": true
+      },
+      {
+        "name": "sortby",
+        "description": "Wie das Ergebnes sortiert werden soll.",
+        "type": "STRING",
+        "choices": [
+          {
+            "name": "neuste zuerst",
+            "value": "date"
+          },
+          {
+            "name": "älteste zuerst",
+            "value": "oldest"
+          },
+          {
+            "name": "nur valide",
+            "value": "validonly"
+          },
+          {
+            "name": "nur abgelaufene",
+            "value": "badonly"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "getwarn",
+    "description": "Zeigt dir eine Verwarnung an mit einer ID.",
+    "options": [
+      {
+        "name": "warnid",
+        "type": "INTEGER",
+        "description": "Die Verwarnungs ID.",
+        "required": true
+      }
+    ]
+  }
+]

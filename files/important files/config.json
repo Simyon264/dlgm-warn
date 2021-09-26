@@ -1,0 +1,26 @@
+{
+  "bot": {
+    "version": "1.0.0",
+    "Authors": "Simyon#6969, JoshuaZacek#4354",
+    "generalPrefix": "!",
+    "description": "DLGM-Warn-Bot",
+    "slashcommandServerId": "<id here>",
+    "invite": "You cant lol",
+    "lang": "de",
+    "warnchannelID": "<id here>",
+    "warnRoleId": "<id here>",
+    "validWarn": ["name", "grund", "punkte"],
+    "optionalWarn": ["extra"]
+  },
+  "special": { "owner": "327840918482714626" },
+  "messageColours": {
+    "info": "0x0099ff",
+    "warn": "0xf54242",
+    "done": "0x00ff95",
+    "mod": "0xeb9b34",
+    "member": "0x923afc"
+  },
+  "commands": {
+    "categories": ["general", "moderation", "warns", "fun", "server"]
+  }
+}
