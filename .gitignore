@@ -1,0 +1,13 @@
+node_modules
+token.txt
+.vscode
+/files/serverConfigs/*.json
+/files/log/commandLogs/*.txt
+/files/log/*.txt
+!/files/serverConfigs/template.json
+.DS_store
+/files/cache/evalreturn.txt
+/files/log/latest.log
+package-lock.json
+/files/cache/*.txt
+/files/warns/*.json
