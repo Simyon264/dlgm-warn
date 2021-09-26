@@ -1,14 +1,14 @@
 {
   "bot": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "Authors": "Simyon#6969, JoshuaZacek#4354",
     "generalPrefix": "!",
     "description": "DLGM-Warn-Bot",
-    "slashcommandServerId": "<id here>",
+    "slashcommandServerId": "702242808081154079",
     "invite": "You cant lol",
     "lang": "de",
-    "warnchannelID": "<id here>",
-    "warnRoleId": "<id here>",
+    "warnchannelID": "889984940689719326",
+    "warnRoleId": "702273574370803822",
     "validWarn": ["name", "grund", "punkte"],
     "optionalWarn": ["extra"]
   },

@@ -1,2 +1,3 @@
-Version 1.0.0
--deez nuts
+Version 1.0.1
+- Habe noch was gefixt.
+- Deez nuts

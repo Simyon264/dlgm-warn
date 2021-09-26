@@ -22,9 +22,9 @@
         "required": true
       },
       {
-        "name": "steamid",
+        "name": "id",
         "type": "STRING",
-        "description": "Die id von der Person der du ein Warn geben willst.",
+        "description": "Die ID von der Person der du ein Warn geben willst. Dies kann eine Discord oder eine Steam ID sein.",
         "required": true
       },
       {
