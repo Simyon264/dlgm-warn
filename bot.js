@@ -95,11 +95,6 @@ if (writeLog) console.log("The debug log can be found in /log/latest.log")
 console.log("Look into the readme for launch options!")
 console.log("Starting bot...")
 const client = new discord.Client({
-    ws: {
-        properties: {
-            $browser: "Discord iOS"
-        }
-    },
     intents: [discord.Intents.FLAGS.GUILDS,discord.Intents.FLAGS.GUILD_MESSAGES]
 }); // discord client
 
