@@ -1,3 +1,5 @@
-Version 1.0.1
-- Habe noch was gefixt.
-- Deez nuts
+Version 1.0.2
+- Sprach-dateien gefixt.
+- Bei einem Warn steht nun die ID.
+- Man kann jetzt mit `/searchbyname` Verwarnungen mit einem Namen suchen.
+- Deez nuts.
