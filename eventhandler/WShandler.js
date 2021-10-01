@@ -5,12 +5,7 @@ module.exports = {
     run: function (client) {
         try {
             client.on('ready', async () => {
-                client.user.setPresence({
-                        activity: {
-                            name: 'SCP:SL on Daylight gaming',
-                            type: 'PLAYING'
-                        },
-                    })
+                client.user.setActivity("SCP:SL auf Daylight gaming.", {type: "PLAYING"})
                     console.log('Client connected!')
                     console.log(`Authed for user ${client.user.username}`);
             });
