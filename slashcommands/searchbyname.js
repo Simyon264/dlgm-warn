@@ -54,7 +54,7 @@ module.exports = {
                 }
             }
 
-            if (finds.length == 0) return interaction.editReply(`Keine Verwarnungen unter \`${name}\`Na gefunden.`)
+            if (finds.length == 0) return interaction.editReply(`Keine Verwarnungen unter \`${name}\` gefunden.`)
 
             // console.log("deez nutzt")
             interaction.editReply({
