@@ -48,7 +48,7 @@ module.exports = {
                             let extra = ""
                             if (element.extra) extra = `Extra: *${element.extra}*\n`
                         
-                            embed.addField(`Verwarnung vor ${time(date, "R")}`, `${expired.trim()}ID: *${element.id.trim()}${type}*\nGrund: *${element.grund.trim()}*\n${extra.trim()}`)
+                            embed.addField(`Verwarnung ${time(date, "R")}`, `${expired.trim()}ID: *${element.id.trim()}${type}*\nGrund: *${element.grund.trim()}*\n${extra.trim()}`)
                         }
                     });  
                 }
