@@ -193,6 +193,9 @@
       "field6": "*%0*",
       "nobuttons": "<@%0>, du kannst diese Knöpfe nicht nutzen.",
       "cancel": "Verwarnungslöschung abgebrochen."
+    },
+    "searchbyname": {
+      "wait": "Bitte warten..."
     }
   },
   "eventhandlers": {
@@ -213,8 +216,9 @@
       "notvalid": "Bitte schreibe ein richtige Verwarnung.",
       "nowarns": "Diese Person hat noch keine Verwarnungen.",
       "invalidsteamid": "Bitte gebe ein valide ID an.",
-      "pointsm": "%0 hat jetzt %1 Punkte. Insgesamt %2 Punkte.%3",
-      "pointss": "%0 hat jetzt %1 Punkt. Insgesamt %2 Punkte."
+      "pointsm": "%0 hat jetzt %1 Punkte. Insgesamt %2 Punkte.%3%4",
+      "pointss": "%0 hat jetzt %1 Punkt. Insgesamt %2 Punkte.%3",
+      "warnid": "\n**WarnID:** *%0*"
     }
   }
 }
