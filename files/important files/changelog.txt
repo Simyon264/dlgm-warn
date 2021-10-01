@@ -1,4 +1,4 @@
-Version 1.0.2
+Version 1.0.3
 - Sprach-dateien gefixt.
 - Bei einem Warn steht nun die ID.
 - Man kann jetzt mit `/searchbyname` Verwarnungen mit einem Namen suchen.
