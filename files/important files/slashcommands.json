@@ -93,5 +93,17 @@
         "required": true
       }
     ]
+  },
+  {
+    "name": "searchbyname",
+    "description": "Suche Verwarnungen mit einem Namen.",
+    "options": [
+      {
+        "name": "name",
+        "type": "STRING",
+        "description": "Der Name von der Person.",
+        "required": true
+      }
+    ]
   }
 ]
