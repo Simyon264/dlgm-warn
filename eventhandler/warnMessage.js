@@ -95,10 +95,12 @@ module.exports = {
 
                 let extra = ""
 
+                const warnid = f.localization("eventhandlers","warnMessage","warnid",[warnConent.warnid])
+
                 if (points > 3) extra = f.localization("eventhandlers","warnMessage","extra")
 
-                if (points == 1) return message.reply(f.localization("eventhandlers","warnMessage","pointss",[warnConent["name"],points, totalPoints]))
-                message.reply(f.localization("eventhandlers","warnMessage","pointsm",[warnConent["name"],points, totalPoints, extra]))
+                if (points == 1) return message.reply(f.localization("eventhandlers","warnMessage","pointss",[warnConent["name"],points, totalPoints,warnid]))
+                message.reply(f.localization("eventhandlers","warnMessage","pointsm",[warnConent["name"],points, totalPoints, extra,warnid]))
             } else return message.reply(f.localization("eventhandlers", "warnMessage", "invalidsteamid"))
         });
     }
