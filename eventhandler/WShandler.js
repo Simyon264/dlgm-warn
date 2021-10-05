@@ -18,6 +18,5 @@ module.exports = {
         } catch (error) {
             f.error(error, 'WShandler.js', true)
         }
-
     }
 }
