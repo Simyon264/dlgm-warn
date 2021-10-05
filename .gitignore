@@ -8,3 +8,4 @@ token.txt
 package-lock.json
 /files/cache/*.txt
 /files/warns/*.json
+/files/important files/config.json
