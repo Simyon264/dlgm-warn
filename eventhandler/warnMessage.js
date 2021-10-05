@@ -57,6 +57,7 @@ module.exports = {
             if (warnConent["id"]) steamID = warnConent['id'].replace(" ","").split("@")[0]
             
             warnConent.id = steamID
+            warnConent.name = warnConent.name.trim()
 
             if (!hasValid) return console.log("NOT A WARN")
 
