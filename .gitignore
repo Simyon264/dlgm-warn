@@ -7,5 +7,5 @@ token.txt
 /files/log/latest.log
 package-lock.json
 /files/cache/*.txt
-/files/warns/*.json
+/files/warns/*.*
 /files/important files/config.json
