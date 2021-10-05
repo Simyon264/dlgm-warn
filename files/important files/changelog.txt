@@ -1,5 +1,7 @@
-Version 1.0.3
+Version 1.1.3
 - Sprach-dateien gefixt.
-- Bei einem Warn steht nun die ID.
-- Man kann jetzt mit `/searchbyname` Verwarnungen mit einem Namen suchen.
+- Man kann jetzt mit `/modifywarn` Verwarnungen ändern.
+- Der Name wird jetzt getrimmed wenn eine Verwarnung geschrieben wird.
+- Die ID Datei wird jetzt automatisch erstellt wenn sie nicht existiert.
+- Presence geändert zu "auf DayLight Gaming".
 - Deez nuts.
