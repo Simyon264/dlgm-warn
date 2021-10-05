@@ -5,7 +5,7 @@ module.exports = {
     run: function (client) {
         try {
             client.on('ready', async () => {
-                client.user.setActivity("SCP:SL auf Daylight gaming.", {type: "PLAYING"})
+                client.user.setActivity("auf DayLight Gaming", {type: "PLAYING"})
                     console.log('Client connected!')
                     console.log(`Authed for user ${client.user.username}`);
             });
