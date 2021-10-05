@@ -95,7 +95,7 @@ if (writeLog) console.log("The debug log can be found in /log/latest.log")
 console.log("Look into the readme for launch options!")
 console.log("Starting bot...")
 const client = new discord.Client({
-    intents: [discord.Intents.FLAGS.GUILDS,discord.Intents.FLAGS.GUILD_MESSAGES]
+    intents: [discord.Intents.FLAGS.GUILDS,discord.Intents.FLAGS.GUILD_MESSAGES,discord.Intents.FLAGS.DIRECT_MESSAGES,discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS]
 }); // discord client
 
 console.log("Deleting error files...")
@@ -105,8 +105,14 @@ for (let index = 0; index < files.length; index++) {
         fs.unlinkSync(`./files/log/${files[index]}`)
         f.log(`Deleted file: ${files[index]}`)
     }
-    
 }
+
+if (!fs.existsSync("./files/warns/id.txt")) {
+    console.log(colors.red("ID file not found, creating..."))
+    fs.writeFileSync("./files/warns/id.txt", "0")
+    console.log(colors.green("Done!"))
+}
+    
 // Start readline interface
 const rl = readline.createInterface({
     input: process.stdin,
