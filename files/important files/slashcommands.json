@@ -105,5 +105,47 @@
         "required": true
       }
     ]
+  },
+  {
+    "name": "modifywarn",
+    "description": "Modifiziere eine Verwarnung.",
+    "options": [
+      {
+        "name": "warnid",
+        "type": "INTEGER",
+        "description": "Die WarnID von dem Warn den du Modifizieren willst.",
+        "required": true
+      },
+      {
+        "name": "change",
+        "description": "Was du Modifizieren willst.",
+        "type": "STRING",
+        "required": true,
+        "choices": [
+          {
+            "name": "grund",
+            "value": "grund"
+          },
+          {
+            "name": "name",
+            "value": "name"
+          },
+          {
+            "name": "punkte",
+            "value": "punkte"
+          },
+          {
+            "name": "extra",
+            "value": "extra"
+          }
+        ]
+      },
+      {
+        "name": "neuerwert",
+        "type": "STRING",
+        "description": "Der neue Wert.",
+        "required": true
+      }
+    ]
   }
 ]
