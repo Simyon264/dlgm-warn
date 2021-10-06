@@ -39,7 +39,7 @@ module.exports = {
             if (warnConent["punkte"]) warnConent["punkte"] = Math.round(parseFloat(warnConent["punkte"].toString().replace(",",".")) * 10) / 10
 
 
-            console.log(warnConent)
+            // console.log(warnConent)
             
             let validWarn = true
             let hasValid = false
@@ -59,19 +59,19 @@ module.exports = {
             warnConent.id = steamID
             warnConent.name = warnConent.name.trim()
 
-            if (!hasValid) return console.log("NOT A WARN")
+            if (!hasValid) return //console.log("NOT A WARN")
 
             
 
-            console.log(steamID)
+            // console.log(steamID)
 
             if (steamID.length == 17 || steamID.length == 18) {
                 if (steamID.length == 17) warnConent.type = "steam"
                 if (steamID.length == 18) warnConent.type = "discord"
-                console.log(validWarn)
+                // console.log(validWarn)
 
                 if (!validWarn) return message.reply(f.localization("eventhandlers","warnMessage","notvalid"))
-                console.log("VALID")
+                // console.log("VALID")
 
                 f.addWarn(steamID, warnConent)
                 fs.writeFileSync("./files/warns/id.txt", warnConent.warnid.toString())
@@ -81,11 +81,11 @@ module.exports = {
             
 
                 const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000)
-                console.log(timestamp)
+                // console.log(timestamp)
                 let points = 0
                 let totalPoints = 0
                 for (let index = 0; index < warns.length; index++) {
-                    console.log(warns[index]["createdAt"])
+                    // console.log(warns[index]["createdAt"])
                     if (warns[index]["createdAt"] < timestamp) {
                         totalPoints = totalPoints + Math.round(parseFloat(warns[index]["punkte"].toString().replace(",",".")) * 10) / 10
                     } else {
