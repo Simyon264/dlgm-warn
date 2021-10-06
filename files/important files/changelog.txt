@@ -1,4 +1,4 @@
-Version 1.1.3
+Version 1.1.4
 - Sprach-dateien gefixt.
 - Man kann jetzt mit `/modifywarn` Verwarnungen ändern.
 - Der Name wird jetzt getrimmed wenn eine Verwarnung geschrieben wird.
