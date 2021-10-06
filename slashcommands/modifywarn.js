@@ -35,12 +35,10 @@ module.exports = {
                 }
             }
             if (!idObj.found) return interaction.editReply(f.localization("slashcommands", "getwarn", "notfound", [id]))
-            
-            console.log("1")
-            console.log(idObj)
 
             const oldName = idObj.obj.name
-            const old = idObj.obj[change].toString()
+            let old = idObj.obj[change]
+            if (typeof old == "undefined") old = "Nichts"
 
             switch (change) {
                 case "punkte":
@@ -82,9 +80,6 @@ module.exports = {
                     fs.writeFileSync(`./files/warns/${idObj.filename}`, JSON.stringify(file))
                 }
             }
-
-            // 
-
         } else return interaction.editReply(f.localization("slashcommands", "getwarns", "noperms"))
     }
 }
