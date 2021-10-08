@@ -1,4 +1,4 @@
-Version 1.1.5
+Version 1.1.6
 - Sprach-dateien gefixt.
 - Warn message geändert.
 - Man kann jetzt mit `/modifywarn` Verwarnungen ändern.
