@@ -58,7 +58,7 @@ module.exports = {
             
             const embed = new discord.MessageEmbed()
                 .setTitle("Verwarnung geändert!")
-                .setDescription(`**Verwarnung für \`${oldName.trim()}\`**\n\n\`${old.trim()}\` wurde zu \`${idObj.obj[change].toString().trim()}\`\n\n`)
+                .setDescription(`**Verwarnung für \`${oldName.toString().trim()}\`**\n\n\`${old.toString().trim()}\` wurde zu \`${idObj.obj[change].toString().trim()}\`\n\n`)
                 .setColor(0x00AE86)
                 .setFooter(f.localization("slashcommands","getwarn","footer",[idObj.obj.warnid]))
                 .addField(f.localization("slashcommands", "getwarn", "field1t"), f.localization("slashcommands", "getwarn", "field1", [idObj.obj.name.trim()]))
