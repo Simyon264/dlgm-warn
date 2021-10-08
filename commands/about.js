@@ -1,6 +1,6 @@
 const f = require('../functions.js');
 const discord = require('discord.js');
-
+const fs = require("fs")
 
 module.exports = {
 	name: 'about',
@@ -28,7 +28,7 @@ module.exports = {
 			.setTitle(f.localization("commands","about","about"))
 			.setColor(colourInfo)
 			.setDescription(f.localization("commands","about","description"))
-			.addField(f.localization("commands","about","version"), f.config().bot.version)
+			.addField(f.localization("commands","about","version"), fs.readFileSync("./files/important files/version.txt","utf-8"))
 			.addField(f.localization("commands","about","authers"), f.config().bot.Authors)
 			.setThumbnail(client.user.avatarURL())
 			.addField(f.localization("commands","about","uptime"), `${days}d ${hours}h ${minutes}m ${seconds}s`)

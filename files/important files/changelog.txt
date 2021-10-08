@@ -1,5 +1,6 @@
-Version 1.1.4
+Version 1.1.5
 - Sprach-dateien gefixt.
+- Warn message geändert.
 - Man kann jetzt mit `/modifywarn` Verwarnungen ändern.
 - Der Name wird jetzt getrimmed wenn eine Verwarnung geschrieben wird.
 - Die ID Datei wird jetzt automatisch erstellt wenn sie nicht existiert.

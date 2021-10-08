@@ -4,8 +4,8 @@ token.txt
 /files/serverConfigs/*.json
 !/files/serverConfigs/template.json
 .DS_store
-/files/log/latest.log
+/files/log/*.*
 package-lock.json
-/files/cache/*.txt
+/files/cache/*.*
 /files/warns/*.*
 /files/important files/config.json
