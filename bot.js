@@ -14,6 +14,8 @@ global.showfilestart = false;
 global.nocolour = false;
 global.logQueue = []
 
+if (!fs.existsSync("./files/log")) fs.mkdirSync("./files/log")
+
 //This function executes every 5 seconds
 global.tick = setInterval(function () {
     //console.log("called")
