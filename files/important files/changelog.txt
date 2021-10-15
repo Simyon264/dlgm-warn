@@ -1,8 +1,2 @@
-Version 1.1.6
-- Sprach-dateien gefixt.
-- Warn message geändert.
-- Man kann jetzt mit `/modifywarn` Verwarnungen ändern.
-- Der Name wird jetzt getrimmed wenn eine Verwarnung geschrieben wird.
-- Die ID Datei wird jetzt automatisch erstellt wenn sie nicht existiert.
-- Presence geändert zu "auf DayLight Gaming".
-- Deez nuts.
+Version 1.1.7
+- Log ordner check eingebaut um startup-crashes zu vermeiden
