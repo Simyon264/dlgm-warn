@@ -48,7 +48,7 @@ module.exports = {
                 if (extra) extraMsg = `Extra: ${extra}\n`
 
                 if (interaction.channel.id == f.config().bot.warnchannelID) {
-                    interaction.editReply(`Name: ${name}\nID: ${steamID}${type}\nGrund: ${grund}\nPunkte: ${punkte}\n${extraMsg}\nVerwarnung von: <@${warns.by}> (${warns.byName})`)
+                    interaction.editReply(`Name: ${name}\nID: ${steamID}${type}\nGrund: ${grund}\nPunkte: ${punkte}\n${extraMsg}\nVerwarnung von: <@${warns.by}> (${warns.byName})\nWarnID: *${warns.warnid}*`)
                 } else {
                     await interaction.guild.channels.cache.find(channel => channel.id == f.config().bot.warnchannelID).send(`Name: ${name}\nid: ${steamID}${type}\nGrund: ${grund}\nPunkte: ${punkte}\n${extraMsg}\nVerwarnung von: <@${warns.by}> (${warns.byName})`);
                     interaction.editReply("Verwarnung wurde vergeben.")
