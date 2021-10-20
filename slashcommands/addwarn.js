@@ -41,16 +41,29 @@ module.exports = {
 
                 warns.warnid = parseInt(fs.readFileSync("./files/warns/id.txt", "utf-8")) + 1
                 fs.writeFileSync("./files/warns/id.txt", warns.warnid.toString())
-            
+                
+                const embed = new discord.MessageEmbed()
+                        .setColor(0x00AE86)
+                        .setTitle("Neue Verwarnung!")
+                        .addField("❯ Name", `*${name}*`)
+                        .addField("❯ ID", `*${steamID}${type}*`)
+                        .addField("❯ Grund", `*${grund}*`)
+                        .addField("❯ Punkte", `*${punkte}*`)
+                if (extra) embed.addField("❯ Extra", `*${extra}*`);
+                embed.addField("❯ Verwarnung von", `<@${warns.by}> (${warns.byName})`)
+                embed.setFooter(`WarnID | ${warns.warnid}`)
+                embed.setAuthor(warns.byName, interaction.user.avatarURL({ dynamic: true }))
+
                 f.addWarn(steamID,warns)
-            
-                let extraMsg = ""
-                if (extra) extraMsg = `Extra: ${extra}\n`
 
                 if (interaction.channel.id == f.config().bot.warnchannelID) {
-                    interaction.editReply(`Name: ${name}\nID: ${steamID}${type}\nGrund: ${grund}\nPunkte: ${punkte}\n${extraMsg}\nVerwarnung von: <@${warns.by}> (${warns.byName})\nWarnID: *${warns.warnid}*`)
+                    interaction.editReply({
+                            embeds: [embed]
+                    })
                 } else {
-                    await interaction.guild.channels.cache.find(channel => channel.id == f.config().bot.warnchannelID).send(`Name: ${name}\nid: ${steamID}${type}\nGrund: ${grund}\nPunkte: ${punkte}\n${extraMsg}\nVerwarnung von: <@${warns.by}> (${warns.byName})`);
+                    await interaction.guild.channels.cache.find(channel => channel.id == f.config().bot.warnchannelID).send({
+                            embeds: [embed]
+                    });
                     interaction.editReply("Verwarnung wurde vergeben.")
                 }
             } else return interaction.editReply(f.localization("slashcommands", "addwarn", "invalidsteamid"))
