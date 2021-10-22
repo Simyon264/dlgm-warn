@@ -46,7 +46,7 @@ module.exports = {
                             if (element.createdAt < timestamp) expired = "__**Diese Verwarnung ist abgelaufen**__\n"
 
                             let extra = ""
-                            if (element.extra) extra = `Extra: *${element.extra}*\n`
+                            if (element.extra) extra = `Extra: *${element.extra.trim()}*\n`
                         
                             embed.addField(`Verwarnung ${time(date, "R")}`, `${expired.trim()}ID: *${element.id.trim()}${type}*\nGrund: *${element.grund.trim()}*\n${extra.trim()}`)
                         }
