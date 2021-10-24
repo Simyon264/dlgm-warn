@@ -43,7 +43,7 @@ function runCMD(commandFile, guildConfig, message, colourWarn, prefix, args, cli
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
                 f.log('The user is still on cooldown...')
-                message.channel.send(`You're using **${commandName}** too quickly. Wait another ${timeLeft.toFixed(1)} seconds to use this command again.`)
+                message.reply(`Du nutz **${commandName}** zu schnell. Warte noch ${timeLeft.toFixed(1)} sekunde(n) um diesen Befehl wieder zu nutzen.`)
                 return;
             }
         }
@@ -70,7 +70,7 @@ function runCMD(commandFile, guildConfig, message, colourWarn, prefix, args, cli
 
             if (!message.member.permissions.has(commandPermissions)) {
                 f.log("User is missing perms")
-                f.embed(message, "Error", colourWarn, `You are missing the permission: ${commandPermissions}`);
+                f.embed(message, "Error", colourWarn, `Dir fehlt die Berechtigung: ${commandPermissions}`);
                 return;
             } else f.log('Perm check passed.')
         }
@@ -153,7 +153,7 @@ module.exports = {
                             } else f.log(`The command ${args[0]} requested by ${message.author.username} could not be found.`)
                         } else {
                             error_handler(err, "Unexpected Error!")
-                            f.embed(message, "", colourWarn, "An unexpected error has occured. Please contact the bot owner (Simyon#6969)");
+                            f.embed(message, "", colourWarn, "Ein Fehler ist aufgetreten. Bitte kontaktiere den Bot owner. (Simyon#6969)");
                         }
                     });
                 } else f.log('Prefix check failed...');
