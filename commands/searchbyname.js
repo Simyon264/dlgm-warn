@@ -1,24 +1,35 @@
 const f = require('../functions.js');
+const fs = require('fs');
 const Discord = require('discord.js');
-const fs = require("fs")
 const {
     time
 } = require('@discordjs/builders');
 
 
 module.exports = {
-    run: async function (interaction, client) {
-        if (interaction.member.roles.cache.has(f.config().bot.warnRoleId)) {
-            const name = interaction.options.get('name').value
-            
-            interaction.editReply(f.localization("slashcommands", "searchbyname", "wait"))
+    name: 'searchbyname',
+    description: "Suche Verwarnungen mit einem Namen.",
+    category: 'warns',
+    modcommand: true,
+    usage: "searchbyname <name>",
+    perms: '',
+    alias: ["search"],
+    cooldown: 1,
+    run: async function(message, prefix, args) {
+        if (!(args.length >= 2)) return message.reply("Bitte gebe einen Namen ein zum suchen.")
+        if (message.member.roles.cache.has(f.config().bot.warnRoleId)) {
+            args.splice(0,1)
+            args = args.join(" ")
+
+            const name = args
+
+            const newMessage = await message.reply(f.localization("slashcommands", "searchbyname", "wait"))
 
             const dir = fs.readdirSync("./files/warns/")
 
             const embed = new Discord.MessageEmbed()
                 .setTitle(`Verwarnungen für \`${name}\``)
                 .setColor(0x00AE86)
-                // .setDescription("")
 
             let file
             let finds = []
@@ -54,15 +65,14 @@ module.exports = {
                 }
             }
 
-            if (finds.length == 0) return interaction.editReply(`Keine Verwarnungen unter \`${name}\` gefunden.`)
+            if (finds.length == 0) return newMessage.edit(`Keine Verwarnungen unter \`${name}\` gefunden.`)
 
             // console.log("deez nutzt")
-            interaction.editReply({
+            newMessage.edit({
                 content: "** **",
                 embeds: [embed]
                 // components: [generateButtons()]
             })
-
-        } else return interaction.editReply(f.localization("slashcommands", "getwarns", "noperms"))
+        } else return message.reply(f.localization("slashcommands", "getwarns", "noperms"))
     }
 }

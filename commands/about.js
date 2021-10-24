@@ -29,7 +29,7 @@ module.exports = {
 			.setColor(colourInfo)
 			.setDescription(f.localization("commands","about","description"))
 			.addField(f.localization("commands","about","version"), fs.readFileSync("./files/important files/version.txt","utf-8"))
-			.addField(f.localization("commands","about","authers"), f.config().bot.Authors)
+			.addField(f.localization("commands","about","authers"), "Simyon#6969, Joshua.#1476")
 			.setThumbnail(client.user.avatarURL())
 			.addField(f.localization("commands","about","uptime"), `${days}d ${hours}h ${minutes}m ${seconds}s`)
 		// Send the embed

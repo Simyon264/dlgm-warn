@@ -4,11 +4,23 @@ const fs = require("fs")
 const { time } = require('@discordjs/builders');
 
 module.exports = {
-    run: async function (interaction, client) {
-        if (interaction.member.roles.cache.has(f.config().bot.warnRoleId)) {
-            const id = interaction.options.get('warnid').value
-            const change = interaction.options.get("change").value
-            const newVaule = interaction.options.get("neuerwert").value
+    name: 'modifywarn',
+    description: "Modifiziere eine Verwarnung.",
+    category: 'warns',
+    modcommand: true,
+    usage: "modifywarn <warn ID> <grund|name|punkte|extra> <neuer wert>",
+    perms: '',
+    alias: ["mw"],
+    cooldown: 1,
+    run: async function(message, prefix, args) {
+        if (!(args.length >= 4)) return message.reply("Bitte gebe den Befehl richtig ein.")
+        if (message.member.roles.cache.has(f.config().bot.warnRoleId)) {
+            const id = parseInt(args[1])
+            const change = args[2].toLowerCase()
+            args.splice(0,3)
+            const newVaule = args.join(" ")
+
+            if (isNaN(id)) return message.reply("Bitte gebe eine WarnID an.")
 
             const dir = fs.readdirSync("./files/warns")
             let idObj = {
@@ -34,7 +46,7 @@ module.exports = {
                     if (idObj.found) break
                 }
             }
-            if (!idObj.found) return interaction.editReply(f.localization("slashcommands", "getwarn", "notfound", [id]))
+            if (!idObj.found) return message.reply(f.localization("slashcommands", "getwarn", "notfound", [id]))
 
             const oldName = idObj.obj.name
             let old = idObj.obj[change]
@@ -43,11 +55,14 @@ module.exports = {
             switch (change) {
                 case "punkte":
                     const newNumber = Math.round(parseFloat(newVaule.toString().replace(",", ".")) * 10) / 10
-                    if (isNaN(newNumber)) return interaction.editReply("Bitte gebe eine Nummer ein.")
+                    if (isNaN(newNumber)) return message.reply("Bitte gebe eine Nummer ein.")
                     idObj.obj["punkte"] = newNumber
                     break;
                 default:
-                    idObj.obj[change] = newVaule
+                    let validArr = ["punkte","grund","extra","name"]
+                    if (validArr.some(v => change.includes(v))) {
+                        idObj.obj[change] = newVaule
+                    } else return message.reply("Bitte wähle einen von den 4 optionen (`Punkte, Grund, Name und extra`) für den Wert der geändert werden soll.") 
                     break;
             }
             
@@ -80,17 +95,15 @@ module.exports = {
             const row = new discord.MessageActionRow()
                 .addComponents(button1)
                 .addComponents(button2)
-
-            const message = await interaction.fetchReply()
             
-            interaction.editReply({ content: "** **", embeds: [embed], components: [row]})
+            const newMessage = await message.reply({ content: "** **", embeds: [embed], components: [row]})
             
-            const collector = message.createMessageComponentCollector({ componentType: 'BUTTON', time: 600000 });
+            const collector = newMessage.createMessageComponentCollector({ componentType: 'BUTTON', time: 600000 });
 
 
             let deleted = false
             collector.on('collect', async i => {
-                if (i.user.id === interaction.user.id) {
+                if (i.user.id === message.author.id) {
                     i.deferUpdate()
                     switch (i.customId) {
                         case "yes":
@@ -104,7 +117,7 @@ module.exports = {
                             }
                             embed.setDescription(`**Verwarnung für \`${oldName.toString().trim()}\`**\n\n\`${old.toString().trim()}\` wurde zu \`${idObj.obj[change].toString().trim()}\`\n\n`)
                             embed.setTitle("Verwarnung geändert!")
-                            interaction.editReply({ embeds: [embed], components: [] })
+                            newMessage.edit({ embeds: [embed], components: [] })
                             collector.stop()
                             break;
                         case "no":
@@ -120,7 +133,7 @@ module.exports = {
             collector.on('end', collected => {
                 if (deleted) return
                 embed.setTitle("Verwarnungsänderung abgebrochen.")
-                interaction.editReply({embeds: [embed], components: [] })
+                newMessage.edit({embeds: [embed], components: [] })
             });
 
             async function delMsg(message,time) {
@@ -129,6 +142,6 @@ module.exports = {
             }
             
 
-        } else return interaction.editReply(f.localization("slashcommands", "getwarns", "noperms"))
+        } else return message.reply(f.localization("slashcommands", "getwarns", "noperms"))
     }
 }

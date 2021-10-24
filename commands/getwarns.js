@@ -1,17 +1,27 @@
 const f = require('../functions.js');
 const discord = require('discord.js');
-const {
-    time
-} = require('@discordjs/builders');
+const fs = require("fs")
+const { time } = require('@discordjs/builders');
 
 module.exports = {
-    run: async function(interaction, client) {
-        if (interaction.member.roles.cache.has(f.config().bot.warnRoleId)) {
-            const steamID = interaction.options.get('steamid').value.split("@")[0].replace(" ", "")
+    name: 'getwarns',
+    description: "Zeigt dir die Warns von einer der bestimmten Person an.",
+    category: 'warns',
+    modcommand: true,
+    usage: "getwarns <id> [newest|oldest|onlyvalid|badonly]",
+    perms: '',
+    alias: ["gws"],
+    cooldown: 1,
+    run: async function (message, prefix, args) {
+        if (!(args.length >= 2)) return message.reply("Bitte gebe den Befehl richtig ein.")
+        if (message.member.roles.cache.has(f.config().bot.warnRoleId)) {
+            const steamID = args[1].split("@")[0].replace(" ", "")
             let sortby = "date"
-            if (interaction.options.get("sortby")) {
-                sortby = interaction.options.get("sortby").value
-                // console.log(sortby)
+            if (args[2]) {
+                let validArr = ["newest","oldest","onlyvalid","badonly"]
+                if (validArr.some(v => args[2].includes(v))) {
+                    sortby = args[2]
+                } else return message.reply("Bitte wähle einen von den 4 optionen (`Newest, Oldest, Onlyvalid und Badonly`) für die sortierung.") 
             }
 
             if (steamID.length == 17 || steamID.length == 18) {
@@ -24,7 +34,7 @@ module.exports = {
                 const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000)
                 const warns = f.getWarns(steamID)
 
-                if (warns == "1") return interaction.editReply(f.localization("slashcommands", "getwarns", "nowarns"))
+                if (warns == "1") return message.reply(f.localization("slashcommands", "getwarns", "nowarns"))
 
                 let points = 0
                 let totalPoints = 0
@@ -50,12 +60,14 @@ module.exports = {
                 }
                 if (sortby == "date") items = items.reverse()
 
-                if (items.length == 0 && sortby != "date") return interaction.editReply("Keine Ergebnisse unter den aktuellen Filtern gefunden.")
+                if (items.length == 0 && sortby != "date") return message.reply("Keine Ergebnisse unter den aktuellen Filtern gefunden.")
 
                 const maxItemsForPage = 5
                 const maxpages = Math.ceil(items.length / maxItemsForPage)
 
-                function update() {
+                const newMessage = await message.reply("Bitte warten...")
+
+                async function update() {
                     const embed = new discord.MessageEmbed()
                         .setColor(0x00AE86)
                         .setTitle(f.localization("slashcommands", "getwarns", "title", [items[0]["name"].replace(" ", "")]))
@@ -90,7 +102,8 @@ module.exports = {
                         }
                     }
 
-                    interaction.editReply({
+                    newMessage.edit({
+                        content: "** **",
                         embeds: [embed],
                         components: [generateButtons()]
                     })
@@ -126,15 +139,13 @@ module.exports = {
 
                 update()
 
-                const message = await interaction.fetchReply()
-
-                const collector = message.createMessageComponentCollector({
+                const collector = newMessage.createMessageComponentCollector({
                     componentType: 'BUTTON',
                     time: 600000
                 });
 
                 collector.on('collect', async i => {
-                    if (i.user.id === interaction.user.id) {
+                    if (i.user.id === message.author.id) {
                         i.deferUpdate()
                         switch (i.customId) {
                             case "right":
@@ -149,16 +160,16 @@ module.exports = {
                                 break;
                             case "delete":
                                 deleted = true
-                                interaction.deleteReply()
+                                newMessage.delete()
                                 break;
                             case "custom":
-                                const customMessage = await interaction.channel.send(f.localization("slashcommands", "getwarns", "newsite", [i.user.id]))
+                                const customMessage = await message.channel.send(f.localization("slashcommands", "getwarns", "newsite", [i.user.id]))
                                 button4.setDisabled(true)
-                                interaction.editReply({
+                                newMessage.edit({
                                     components: [generateButtons()]
                                 })
                                 const filter = m => m.author.id == i.user.id
-                                const customCollecter = interaction.channel.createMessageCollector({
+                                const customCollecter = message.channel.createMessageCollector({
                                     filter,
                                     time: 15000
                                 });
@@ -176,7 +187,7 @@ module.exports = {
                                 customCollecter.on("end", async c => {
                                     await customMessage.delete()
                                     button4.setDisabled(false)
-                                    interaction.editReply({
+                                    newMessage.edit({
                                         components: [generateButtons()]
                                     })
                                 })
@@ -190,7 +201,7 @@ module.exports = {
 
                 collector.on('end', collected => {
                     if (deleted) return;
-                    interaction.editReply({
+                    newMessage.edit({
                         components: []
                     })
                 });
@@ -199,7 +210,7 @@ module.exports = {
                     await f.sleep(time)
                     message.delete()
                 }
-            } else return interaction.editReply(f.localization("slashcommands", "getwarns", "invalidsteamid"))
-        } else return interaction.editReply(f.localization("slashcommands", "getwarns", "noperms"))
+            } else return message.reply(f.localization("slashcommands", "getwarns", "invalidsteamid"))
+        } else return message.reply(f.localization("slashcommands", "getwarns", "noperms"))
     }
 }

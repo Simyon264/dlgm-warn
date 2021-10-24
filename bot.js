@@ -16,6 +16,7 @@ global.logQueue = []
 
 if (!fs.existsSync("./files/log")) fs.mkdirSync("./files/log")
 if (!fs.existsSync("./files/warns")) fs.mkdirSync("./files/warns")
+if (!fs.existsSync("./files/cache")) fs.mkdirSync("./files/cache")
 
 //This function executes every 5 seconds
 global.tick = setInterval(function () {

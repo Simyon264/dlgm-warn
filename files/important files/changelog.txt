@@ -1,2 +1,5 @@
-Version 1.1.7
-- Log ordner check eingebaut um startup-crashes zu vermeiden
+Version 1.2.7
+- Slashcommands zu normallen prefixcommands umgewandelt.
+- Mehr übersetzt
+- Confirms für mehrere Commands eingebaut.
+- Deez nutz obv
