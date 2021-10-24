@@ -31,10 +31,10 @@ module.exports = {
                 let items = []
                 let page = 1
 
-                console.log(sortby)
+                // console.log(sortby)
 
                 for (let index = 0; index < warns.length; index++) {
-                    console.log(warns[index]["createdAt"])
+                    // console.log(warns[index]["createdAt"])
                     if (warns[index]["createdAt"] < timestamp) {
                         totalPoints = totalPoints + parseFloat(warns[index]["punkte"].toString().replace(",", "."))
                         if (sortby == "validonly") continue;
@@ -49,6 +49,8 @@ module.exports = {
                     }
                 }
                 if (sortby == "date") items = items.reverse()
+
+                if (items.length == 0 && sortby != "date") return interaction.editReply("Keine Ergebnisse unter den aktuellen Filtern gefunden.")
 
                 const maxItemsForPage = 5
                 const maxpages = Math.ceil(items.length / maxItemsForPage)
@@ -66,7 +68,7 @@ module.exports = {
                     for (let i = 0; i < items.length; i++) {
                         if (itemsCount !== maxItemsForPage) {
                             if (count < i || count == i) {
-                                console.log(items[i])
+                                // console.log(items[i])
                                 let utcSeconds = items[i].createdAt
                                 let date = new Date(0)
                                 date.setUTCSeconds(utcSeconds / 1000)
