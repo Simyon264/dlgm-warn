@@ -187,7 +187,7 @@ module.exports = {
                                 customCollecter.on("end", async c => {
                                     await customMessage.delete()
                                     button4.setDisabled(false)
-                                    interaction.editReply({
+                                    newMessage.edit({
                                         components: [generateButtons()]
                                     })
                                 })
