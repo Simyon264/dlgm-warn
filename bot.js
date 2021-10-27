@@ -4,6 +4,16 @@ const discord = require("discord.js") // discord.js.... you should know this
 const colors = require('colours') // used to print custom colours in the terminal
 const readline = require("readline") // used for user to input bot token
 const f = require('./functions.js') // general functions
+const sqlite3 = require('sqlite3').verbose() // database
+
+if (!fs.existsSync("./files/warns/warns.db")) fs.writeFileSync("./files/warns/warns.db","")
+
+global.db = new sqlite3.Database('./files/warns/warns.db', sqlite3.OPEN_READWRITE, (err) => {
+  if (err) {
+    console.error(err.message);
+  }
+  console.log('Connected to the database.');
+});
 
 // Defining global vars
 global.devMode = false;
@@ -53,6 +63,9 @@ console.log = function (d) {
     if (!noconsole) process.stdout.write(d + '\n'); // If the console is enabled write to the console.
 };
 /*/
+
+let createDB = false
+
 // Get args from the command that was used to start the bot
 const args = process.argv.slice(2);
 // Run through every args and execute some code if its a valid args
@@ -60,6 +73,33 @@ const errdelete = true
 for (let index = 0; index < args.length; index++) {
     //This will just set some vars to true 
     switch (args[index]) {
+        case "createdb":
+            createDB = true
+            db.exec('CREATE TABLE "warns" ("id"	INTEGER,"warnid"	INTEGER,"name"	TEXT,"grund"	TEXT,"punkte"	BLOB,"createdAt"	INTEGER,"by"	INTEGER,"byName"	TEXT,"type"	TEXT,"extra"	TEXT)', (err) => {
+                if (err) {
+                    console.log(colors.red("ERROR: ") + "Can't create Warn Table.\n" + err.message)
+                } else console.log("Database created.") 
+            })
+            break;
+        case "convert":
+            if (createDB) return
+            console.log("Converting Warn files! Please wait...")
+            let dir = fs.readdirSync("./files/warns")
+            for (let index = 0; index < dir.length; index++) {
+                if (dir[index].includes(".json")) {
+                    let arr = JSON.parse(fs.readFileSync(`./files/warns/${dir[index]}`))
+                    for (let index = 0; index < arr.length; index++) {
+                        let object = arr[index]
+                        if (object.extra) {
+                            db.exec(`INSERT INTO warns(id,warnid,name,grund,punkte,createdAt,by,byName,type,extra) VALUES ('${object.id}',${object.warnid},'${object.name}','${object.grund}','${object.punkte}',${object.createdAt},${object.by},'${object.byName}','${object.type}','${object.extra}');`)
+                        } else {
+                            db.exec(`INSERT INTO warns(id,warnid,name,grund,punkte,createdAt,by,byName,type) VALUES ('${object.id}',${object.warnid},'${object.name}','${object.grund}','${object.punkte}',${object.createdAt},${object.by},'${object.byName}','${object.type}');`)
+                        }
+                    }
+                    fs.unlinkSync(`./files/warns/${dir[index]}`)
+                }
+            }
+            break;
         case "noconsole":
             noconsole = true;
             console.log(colors.magenta("Debug: no console") + " is now enabled")
@@ -116,7 +156,8 @@ if (!fs.existsSync("./files/warns/id.txt")) {
     fs.writeFileSync("./files/warns/id.txt", "0")
     console.log(colors.green("Done!"))
 }
-    
+
+if (createDB) console.log("CreateDB is a startparameter. Bot will not boot.")
 // Start readline interface
 const rl = readline.createInterface({
     input: process.stdin,
@@ -133,6 +174,7 @@ function token() {
 
 // Start bot
 function start() {
+    if (createDB) return
     try {
         let token = fs.readFileSync("./files/important files/token.txt", "utf-8")
 
@@ -192,6 +234,12 @@ function exit(code) {
     process.stdin.resume(); //so the program will not close instantly
     console.log('Destroying client...')
     f.log('Exiting...')
+    db.close((err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        console.log('Closing the database connection.');
+    });
     client.destroy()
     process.exit(code)
 }
