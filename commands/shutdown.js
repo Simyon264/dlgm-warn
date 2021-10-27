@@ -10,7 +10,7 @@ module.exports = {
     category: 'owner',
     modcommand: true,
     usage: 'shutdown',
-    perms: 'owner',
+    perms: '',
     cooldown: 1,
     alias: ["sd"],
     run: function (message, prefix, args, client) {
@@ -20,7 +20,7 @@ module.exports = {
                 process.emit('SIGINT')
             });
         } else {
-            functions.embed(message.channel, "Error", colourWarn, "You do not have the Permission to execute this command!")
+            functions.embed(message, "Fehler", colourWarn, "Du hast nicht genug Rechte um diesen Befehl auszufüren.")
         }
     }
 }
