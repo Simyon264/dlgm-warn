@@ -22,7 +22,7 @@ module.exports = {
                 //          Nur abgelaufenede =         badonly
 
                 const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000)
-                const warns = f.getWarns(steamID)
+                const warns = await f.getWarns(steamID)
 
                 if (warns == "1") return interaction.editReply(f.localization("slashcommands", "getwarns", "nowarns"))
 
@@ -50,7 +50,12 @@ module.exports = {
                 }
                 if (sortby == "date") items = items.reverse()
 
-                if (items.length == 0 && sortby != "date") return interaction.editReply("Keine Ergebnisse unter den aktuellen Filtern gefunden.")
+                console.log(items)
+                console.log(warns)
+
+                if (items.length == 0) return interaction.editReply("Keine Ergebnisse unter den aktuellen Filtern gefunden.")
+
+
 
                 const maxItemsForPage = 5
                 const maxpages = Math.ceil(items.length / maxItemsForPage)
