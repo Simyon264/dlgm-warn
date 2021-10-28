@@ -12,6 +12,7 @@
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
     "colours": "^0.6.0-2",
-    "discord.js": "^13.0.1"
+    "discord.js": "^13.0.1",
+    "sqlite3": "^4.2.0"
   }
 }
