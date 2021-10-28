@@ -1,7 +1,9 @@
 # DLGM-Warnbot
+
 Warn-bot for DLGM.
 
 ## How to install.
+
 1. Make sure you have Node.js installed.
 2. Clone the repository and run `npm install` in the folder.
 3. Type `node bot.js`
@@ -9,11 +11,16 @@ Warn-bot for DLGM.
 5. You are done!
 
 ## Launch options
+
 Wanna disable the console? Or have no colours? Well, we have launch options!
 `npm start` will launch the option `logconsole` enabled. But I will first tell you what we have:
+
+- `createdb` - Creates the Warn Database.
+- `resetdb` - Drops the Warn Database.
+- `convert` - Converts the `.JSON` warns to the Database.
 - `noconsole` - Disables all console output.
 - `debug` - Will output debug messages to the console.
-- `nowrite` - Disables log file writting. *NOTE:* `logconsole` will override this for it's writes.
+- `nowrite` - Disables log file writting. _NOTE:_ `logconsole` will override this for it's writes.
 - `logconsole` - Writes all console output into the log file.
 - `showfilestart` - Shows the file start.
 - `nocolour` - Disables colour in the console.
