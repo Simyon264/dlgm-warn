@@ -62,7 +62,7 @@ module.exports = {
                 const embed = new discord.MessageEmbed()
                     .setColor(0x00AE86)
                     .setTitle("Neue Verwarnung!")
-                    .setDescription(`Alle Punkte: **${totalPoints}**\nAkutelle Punkte: ${points}`)
+                    .setDescription(`Alle Punkte: **${totalPoints}**\nAkutelle Punkte: **${points}**`)
                     .addField("❯ Name", `*${name}*`)
                     .addField("❯ ID", `*${steamID}${type}*`)
                     .addField("❯ Grund", `*${grund}*`)

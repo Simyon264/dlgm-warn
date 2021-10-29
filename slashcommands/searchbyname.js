@@ -12,9 +12,6 @@ module.exports = {
 
             interaction.editReply(f.localization("slashcommands", "searchbyname", "wait"))
 
-
-            // .setDescription("")
-
             let page = 1
 
             let file
@@ -24,23 +21,6 @@ module.exports = {
             // console.log(file)
             file.forEach(element => {
                 finds.push(element)
-
-                let utcSeconds = element.createdAt
-                let date = new Date(0)
-                date.setUTCSeconds(utcSeconds / 1000)
-                let type = ""
-
-                let expired = ""
-
-                if (element.type == "steam") type = "@steam"
-                if (element.type == "discord") type = "@discord"
-
-                if (element.createdAt < timestamp) expired = "__**Diese Verwarnung ist abgelaufen**__\n"
-
-                let extra = ""
-                if (element.extra) extra = `Extra: *${element.extra.trim()}*\n`
-
-                // embed.addField(`Verwarnung ${time(date, "R")}`, `${expired.trim()}\nName: *${element.name}*\nID: *${element.id.toString().trim()}${type}*\nGrund: *${element.grund.trim()}*\n${extra.trim()}Warn ID: *${element.warnid}*\nPunkte: *${element.punkte}*`)
             });
 
             const maxItemsForPage = 5

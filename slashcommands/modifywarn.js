@@ -1,7 +1,5 @@
 const f = require('../functions.js');
 const discord = require('discord.js');
-const fs = require("fs")
-const { time } = require('@discordjs/builders');
 
 module.exports = {
     run: async function (interaction, client) {

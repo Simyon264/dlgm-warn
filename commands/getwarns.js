@@ -1,6 +1,5 @@
 const f = require('../functions.js');
 const discord = require('discord.js');
-const fs = require("fs")
 const { time } = require('@discordjs/builders');
 
 module.exports = {
@@ -32,7 +31,7 @@ module.exports = {
                 //          Nur abgelaufenede =         badonly
 
                 const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000)
-                const warns = f.getWarns(steamID)
+                const warns = await f.getWarns(steamID)
 
                 if (warns == "1") return message.reply(f.localization("slashcommands", "getwarns", "nowarns"))
 
@@ -41,10 +40,7 @@ module.exports = {
                 let items = []
                 let page = 1
 
-                // console.log(sortby)
-
                 for (let index = 0; index < warns.length; index++) {
-                    // console.log(warns[index]["createdAt"])
                     if (warns[index]["createdAt"] < timestamp) {
                         totalPoints = totalPoints + parseFloat(warns[index]["punkte"].toString().replace(",", "."))
                         if (sortby == "validonly") continue;
@@ -60,7 +56,7 @@ module.exports = {
                 }
                 if (sortby == "date") items = items.reverse()
 
-                if (items.length == 0 && sortby != "date") return message.reply("Keine Ergebnisse unter den aktuellen Filtern gefunden.")
+                if (items.length == 0) return message.reply("Keine Ergebnisse unter den aktuellen Filtern gefunden.")
 
                 const maxItemsForPage = 5
                 const maxpages = Math.ceil(items.length / maxItemsForPage)

@@ -50,12 +50,7 @@ module.exports = {
                 }
                 if (sortby == "date") items = items.reverse()
 
-                console.log(items)
-                console.log(warns)
-
                 if (items.length == 0) return interaction.editReply("Keine Ergebnisse unter den aktuellen Filtern gefunden.")
-
-
 
                 const maxItemsForPage = 5
                 const maxpages = Math.ceil(items.length / maxItemsForPage)

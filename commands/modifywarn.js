@@ -1,7 +1,5 @@
 const f = require('../functions.js');
 const discord = require('discord.js');
-const fs = require("fs")
-const { time } = require('@discordjs/builders');
 
 module.exports = {
     name: 'modifywarn',
@@ -22,35 +20,22 @@ module.exports = {
 
             if (isNaN(id)) return message.reply("Bitte gebe eine WarnID an.")
 
-            const dir = fs.readdirSync("./files/warns")
             let idObj = {
                 found: false,
                 obj: {},
-                filename: "",
-                indexPosition: 0
             }
-            let file
-            for (let index = 0; index < dir.length; index++) {
-                if (dir[index] != "id.txt") {
-                    file = JSON.parse(fs.readFileSync(`./files/warns/${dir[index]}`))
-                    let indexC = 0
-                    file.forEach(element => {
-                        indexC++
-                        if (element.warnid == id) {
-                            idObj.found = true
-                            idObj.obj = element
-                            idObj.filename = dir[index]
-                            idObj.indexPosition = indexC
-                        }
-                    });
-                    if (idObj.found) break
-                }
-            }
+            const warn = await f.getWarn(id)
+
+            idObj.obj = warn
+            idObj.obj.id = idObj.obj.id.toString()
+
+            if (typeof warn != "undefined") idObj.found = true;
+
             if (!idObj.found) return message.reply(f.localization("slashcommands", "getwarn", "notfound", [id]))
 
             const oldName = idObj.obj.name
             let old = idObj.obj[change]
-            if (typeof old == "undefined") old = "Nichts"
+            if (old == null) old = "Nichts"
 
             switch (change) {
                 case "punkte":
@@ -59,7 +44,7 @@ module.exports = {
                     idObj.obj["punkte"] = newNumber
                     break;
                 default:
-                    let validArr = ["punkte","grund","extra","name"]
+                    let validArr = ["punkte","grund","extra","name","id"]
                     if (validArr.some(v => change.includes(v))) {
                         idObj.obj[change] = newVaule
                     } else return message.reply("Bitte wähle einen von den 4 optionen (`Punkte, Grund, Name und extra`) für den Wert der geändert werden soll.") 
@@ -80,9 +65,9 @@ module.exports = {
                 .addField("Punkte:",`*${idObj.obj.punkte.toString()}*`)
                 .addField(f.localization("slashcommands","getwarn","field2t"), f.localization("slashcommands","getwarn","field2",[idObj.obj.id.trim(), type]))
                 .addField(f.localization("slashcommands","getwarn","field3t"), f.localization("slashcommands","getwarn","field3",[idObj.obj.grund.toString().trim()]))
-            if (idObj.obj.extra) embed.addField(f.localization("slashcommands","getwarn","field6t"), f.localization("slashcommands","getwarn","field6",[idObj.obj.extra.toString().trim()]))
                 .addField(f.localization("slashcommands", "getwarn", "field4t"), f.localization("slashcommands", "getwarn", "field4", [idObj.obj.punkte.toString().trim()]))
                 .addField(f.localization("slashcommands","getwarn","field5t"), f.localization("slashcommands","getwarn","field5",[idObj.obj.by,idObj.obj.byName]))
+            if (idObj.obj.extra) embed.addField(f.localization("slashcommands", "getwarn", "field6t"), f.localization("slashcommands", "getwarn", "field6", [idObj.obj.extra.toString().trim()]))
 
             const button1 = new discord.MessageButton()
                 .setStyle("SUCCESS")
@@ -100,7 +85,6 @@ module.exports = {
             
             const collector = newMessage.createMessageComponentCollector({ componentType: 'BUTTON', time: 600000 });
 
-
             let deleted = false
             collector.on('collect', async i => {
                 if (i.user.id === message.author.id) {
@@ -108,17 +92,20 @@ module.exports = {
                     switch (i.customId) {
                         case "yes":
                             deleted = true
-                            file = JSON.parse(fs.readFileSync(`./files/warns/${idObj.filename}`))
-                            for (let index = 0; index < file.length; index++) {
-                                if (file[index].warnid == id) {
-                                    file[index] = idObj.obj
-                                    fs.writeFileSync(`./files/warns/${idObj.filename}`, JSON.stringify(file))
+                            db.exec(`UPDATE warns SET ${change} = "${newVaule}" WHERE warnid = ${id}`, (err) => {
+                                if (err) {
+                                    interaction.editReply({
+                                        content: `Ein Fehler ist aufgetreten.\n${err.message}\nCOMMAND: UPDATE warns SET ${change} = "${newVaule}" WHERE warnid = ${id};`,
+                                        embeds: [],
+                                        components: []
+                                    })
+                                    return
                                 }
-                            }
-                            embed.setDescription(`**Verwarnung für \`${oldName.toString().trim()}\`**\n\n\`${old.toString().trim()}\` wurde zu \`${idObj.obj[change].toString().trim()}\`\n\n`)
-                            embed.setTitle("Verwarnung geändert!")
-                            newMessage.edit({ embeds: [embed], components: [] })
-                            collector.stop()
+                                embed.setDescription(`**Verwarnung für \`${oldName.toString().trim()}\`**\n\n\`${old.toString().trim()}\` wurde zu \`${idObj.obj[change].toString().trim()}\`\n\n`)
+                                embed.setTitle("Verwarnung geändert!")
+                                newMessage.edit({ embeds: [embed], components: [] })
+                                collector.stop()
+                            })
                             break;
                         case "no":
                             collector.stop()

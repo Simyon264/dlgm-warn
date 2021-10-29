@@ -42,8 +42,6 @@ module.exports = {
                 .addField(f.localization("slashcommands", "getwarn", "field4t"), f.localization("slashcommands", "getwarn", "field4", [idObj.obj.punkte.toString().trim()]))
                 .addField(f.localization("slashcommands", "getwarn", "field5t"), f.localization("slashcommands", "getwarn", "field5", [idObj.obj.by, idObj.obj.byName]))
             if (idObj.obj.extra) embed.addField(f.localization("slashcommands", "getwarn", "field6t"), f.localization("slashcommands", "getwarn", "field6", [idObj.obj.extra.toString().trim()]))
-
-                // .addField("❯ Moderator",`<@${idObj.obj.by}> (${idObj.obj.byName})`)
             
             interaction.editReply({ content: "** **", embeds: [embed]})
             
