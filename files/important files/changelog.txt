@@ -1,5 +1,3 @@
-Version 1.2.7
-- Slashcommands zu normallen prefixcommands umgewandelt.
-- Mehr übersetzt
-- Confirms für mehrere Commands eingebaut.
-- Deez nutz obv
+Version 2.2.7
+- Commands zu DB umgewandelt.
+- Besserer Search Command.

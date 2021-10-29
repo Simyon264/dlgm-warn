@@ -4,6 +4,17 @@ const discord = require("discord.js") // discord.js.... you should know this
 const colors = require('colours') // used to print custom colours in the terminal
 const readline = require("readline") // used for user to input bot token
 const f = require('./functions.js') // general functions
+const sqlite3 = require('sqlite3').verbose() // database
+
+if (!fs.existsSync("./files/warns/warns.db")) fs.writeFileSync("./files/warns/warns.db", "")
+
+global.db = new sqlite3.Database('./files/warns/warns.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) {
+        console.error(err.message);
+        return
+    }
+    console.log('Connected to the database.');
+});
 
 // Defining global vars
 global.devMode = false;
@@ -18,9 +29,34 @@ if (!fs.existsSync("./files/log")) fs.mkdirSync("./files/log")
 if (!fs.existsSync("./files/warns")) fs.mkdirSync("./files/warns")
 if (!fs.existsSync("./files/cache")) fs.mkdirSync("./files/cache")
 
-//This function executes every 5 seconds
-global.tick = setInterval(function () {
-    //console.log("called")
+global.clearErrorLog = async function(why) {
+    if (typeof why == "undefined") return
+    return new Promise(async (resolve, reject) => {
+        await fs.writeFileSync("./files/log/latest.log", "")
+        f.log("Log File was reseted. Reason: " + why.toString())
+        resolve()
+    })
+}
+
+global.doTick = async function() {
+    return new Promise(async (resolve, reject) => {
+        f.log("Tick called.")
+        if (logQueue.length > 0) {
+            let file = fs.readFileSync('./files/log/latest.log', 'utf-8')
+            logQueue.forEach(element => {
+                file = file + element
+            });
+            logQueue = []
+            await fs.writeFileSync('./files/log/latest.log', file)
+            resolve()
+        }
+    })
+
+}
+
+//This function executes every 2 seconds
+global.tick = setInterval(function() {
+    // console.log("called")
     if (logQueue.length > 0) {
         let file = fs.readFileSync('./files/log/latest.log', 'utf-8')
         logQueue.forEach(element => {
@@ -29,7 +65,7 @@ global.tick = setInterval(function () {
         logQueue = []
         fs.writeFileSync('./files/log/latest.log', file)
     }
-},5000)
+}, 2000)
 
 /*/
 // Redefining the console
@@ -53,6 +89,11 @@ console.log = function (d) {
     if (!noconsole) process.stdout.write(d + '\n'); // If the console is enabled write to the console.
 };
 /*/
+
+let createDB = false
+let convert = false
+let returnBoot = false
+
 // Get args from the command that was used to start the bot
 const args = process.argv.slice(2);
 // Run through every args and execute some code if its a valid args
@@ -60,6 +101,64 @@ const errdelete = true
 for (let index = 0; index < args.length; index++) {
     //This will just set some vars to true 
     switch (args[index]) {
+        case "resetdb":
+            returnBoot = true
+            db.exec('DROP TABLE "main"."warns";', (err) => {
+                if (err) {
+                    console.log(colors.red("ERROR: ") + "Can't reset Warn Table.\n" + err.message)
+                }
+            })
+            break;
+        case "createdb":
+            createDB = true
+            returnBoot = true
+            db.exec('CREATE TABLE "warns" ("id"	TEXT,"warnid"	INTEGER,"name"	TEXT,"grund"	TEXT,"punkte"	BLOB,"createdAt"	TEXT,"by"	TEXT,"byName"	TEXT,"type"	TEXT,"extra"	TEXT)', (err) => {
+                if (err) {
+                    console.log(colors.red("ERROR: ") + "Can't create Warn Table.\n" + err.message)
+                } else console.log("Database created.")
+            })
+            break;
+        case "convert":
+            if (createDB) return
+            convert = true
+            returnBoot = true
+            clearErrorLog("Convert.").then(() => {
+                console.log("Converting Warn files! Please wait...")
+                let dir = fs.readdirSync("./files/warns")
+                for (let index = 0; index < dir.length; index++) {
+                    if (dir[index].includes(".json")) {
+                        let arr = JSON.parse(fs.readFileSync(`./files/warns/${dir[index]}`))
+                        for (let index = 0; index < arr.length; index++) {
+                            let object = arr[index]
+                            f.log(`ADDING ID: ${object.warnid}`)
+                            f.log(`REASON: ${object.grund}`)
+                            if (object.extra) {
+                                db.exec(`INSERT INTO "main"."warns"("id","warnid","name","grund","punkte","createdAt","by","byName","type","extra") VALUES ('${object.id.toString().replaceAll("'","''")}',${parseInt(object.warnid)},'${object.name.toString().replaceAll("'","''")}','${object.grund.toString().replaceAll("'","''")}',${parseFloat(object.punkte)},${parseInt(object.createdAt)},'${object.by.toString().replaceAll("'","''")}','${object.byName.toString().replaceAll("'","''")}','${object.type.toString().replaceAll("'","''")}','${object.extra.toString().replaceAll("'","''")}');`, (err) => {
+                                    if (err) {
+                                        f.log(`SQLERR: ${err.message}\nSQL COMMAND: INSERT INTO "main"."warns"("id","warnid","name","grund","punkte","createdAt","by","byName","type","extra") VALUES ('${object.id.toString().replaceAll("'","''")}',${parseInt(object.warnid)},'${object.name.toString().replaceAll("'","''")}','${object.grund.toString().replaceAll("'","''")}',${parseFloat(object.punkte)},${parseInt(object.createdAt)},'${object.by.toString().replaceAll("'","''")}','${object.byName.toString().replaceAll("'","''")}','${object.type.toString().replaceAll("'","''")}','${object.extra.toString().replaceAll("'","''")}');`)
+                                    }
+                                    doTick().then(() => {
+                                        f.log("Called tick: Convert.")
+                                    })
+                                })
+                            } else {
+                                db.exec(`INSERT INTO "main"."warns"("id","warnid","name","grund","punkte","createdAt","by","byName","type","extra") VALUES ('${object.id.toString().replaceAll("'","''")}',${parseInt(object.warnid)},'${object.name.toString().replaceAll("'","''")}','${object.grund.toString().replaceAll("'","''")}',${parseFloat(object.punkte)},${parseInt(object.createdAt)},'${object.by.toString().replaceAll("'","''")}','${object.byName.toString().replaceAll("'","''")}','${object.type.toString().replaceAll("'","''")}',NULL);`, (err) => {
+                                    if (err) {
+                                        f.log(`SQLERR: ${err.message}\nSQL COMMAND: INSERT INTO "main"."warns"("id","warnid","name","grund","punkte","createdAt","by","byName","type","extra") VALUES ('${object.id.toString().replaceAll("'","''")}',${parseInt(object.warnid)},'${object.name.toString().replaceAll("'","''")}','${object.grund.toString().replaceAll("'","''")}',${parseFloat(object.punkte)},${parseInt(object.createdAt)},'${object.by.toString().replaceAll("'","''")}','${object.byName.toString().replaceAll("'","''")}','${object.type.toString().replaceAll("'","''")}',NULL);`)
+                                    }
+                                    doTick().then(() => {
+                                        f.log("Called tick: Convert.")
+                                    })
+                                })
+                            }
+
+                        }
+                        fs.unlinkSync(`./files/warns/${dir[index]}`)
+                    }
+                }
+            })
+
+            break;
         case "noconsole":
             noconsole = true;
             console.log(colors.magenta("Debug: no console") + " is now enabled")
@@ -96,10 +195,15 @@ for (let index = 0; index < args.length; index++) {
 
 if (writeLog) console.log("The debug log can be found in /log/latest.log")
 
+if (createDB) console.log("CreateDB is a startparameter. Bot will not boot.")
+if (convert) console.log("Convert is a startparameter. Bot will not boot.")
+
+if (returnBoot) console.log("Boot return.")
+
 console.log("Look into the readme for launch options!")
 console.log("Starting bot...")
 const client = new discord.Client({
-    intents: [discord.Intents.FLAGS.GUILDS,discord.Intents.FLAGS.GUILD_MESSAGES,discord.Intents.FLAGS.DIRECT_MESSAGES,discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS]
+    intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.DIRECT_MESSAGES, discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS]
 }); // discord client
 
 console.log("Deleting error files...")
@@ -116,7 +220,7 @@ if (!fs.existsSync("./files/warns/id.txt")) {
     fs.writeFileSync("./files/warns/id.txt", "0")
     console.log(colors.green("Done!"))
 }
-    
+
 // Start readline interface
 const rl = readline.createInterface({
     input: process.stdin,
@@ -133,6 +237,7 @@ function token() {
 
 // Start bot
 function start() {
+    if (returnBoot) return;
     try {
         let token = fs.readFileSync("./files/important files/token.txt", "utf-8")
 
@@ -192,6 +297,12 @@ function exit(code) {
     process.stdin.resume(); //so the program will not close instantly
     console.log('Destroying client...')
     f.log('Exiting...')
+    db.close((err) => {
+        if (err) {
+            return console.error(err.message);
+        }
+        console.log('Closing the database connection.');
+    });
     client.destroy()
     process.exit(code)
 }

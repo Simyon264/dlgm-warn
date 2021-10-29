@@ -75,7 +75,7 @@ module.exports = {
                 f.addWarn(steamID, warnConent)
                 fs.writeFileSync("./files/warns/id.txt", warnConent.warnid.toString())
             
-                const warns = f.getWarns(steamID)
+                const warns = await f.getWarns(steamID)
                 if (warns == "1") return message.reply(f.localization("eventhandlers", "warnMessage", "nowarns"))
             
 

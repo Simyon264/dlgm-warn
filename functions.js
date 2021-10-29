@@ -4,35 +4,93 @@ const f = require('./functions.js')
 const colors = require('colours')
 const path = require("path");
 
-exports.getWarns = function (steamID) {
-    let file
-    try {
-        file = JSON.parse(fs.readFileSync(`./files/warns/${steamID}.json`))
-    } catch (error) {
-        return "1"
-    }
-    return file
+exports.replaceAllCaseInsensitve = function(strReplace, strWith, string) {
+    let esc = strReplace.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    let reg = new RegExp(esc, 'ig');
+    return string.replace(reg, strWith);
 }
 
-exports.addWarn = function (steamID, warnConent) {
-    if (f.getWarns(steamID) == "1") { // No warns
-        const fileContent = [
-            warnConent
-        ]
-        fs.writeFileSync(`./files/warns/${steamID}.json`, JSON.stringify(fileContent))
-    } else { // yes warns
-        let file = JSON.parse(fs.readFileSync(`./files/warns/${steamID}.json`))
-        file.push(warnConent)
-        fs.writeFileSync(`./files/warns/${steamID}.json`,JSON.stringify(file))
-    }
+exports.getWarns = function(id) {
+    return new Promise((resolve, reject) => {
+        db.serialize(() => {
+            db.all(`SELECT \"_rowid_\",* FROM \"main\".\"warns\" WHERE \"id\" LIKE '%${id}%' ESCAPE '/'`, (err, row) => {
+                if (err) {
+                    console.error(err.message)
+                    reject("1")
+                    return
+                }
+                console.log(row)
+                resolve(row)
+            })
+        })
+    })
 }
 
-exports.localization = function (category, string, translationString, args) {
+exports.search = function(search) {
+    return new Promise((resolve, reject) => {
+        db.serialize(() => {
+            db.all(`SELECT \"_rowid_\",* FROM \"main\".\"warns\" WHERE \"name\" LIKE '%${search}%' ESCAPE '/'`, (err, row) => {
+                if (err) {
+                    console.error(err.message)
+                    reject("1")
+                    return
+                }
+                // console.log(row)
+                resolve(row)
+            })
+        })
+    })
+}
+
+exports.getWarn = function(warnid) {
+    return new Promise((resolve, reject) => {
+        db.serialize(() => {
+            db.get('SELECT id id,warnid warnid,name name,grund grund,punkte punkte, createdAt createdAt, by by, byName byName, type type, extra extra FROM warns WHERE warnid = ?', [warnid], (err, row) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err)
+                    return
+                }
+                f.log("GET REQUEST FOR WARNID: " + warnid)
+                // console.log(row)
+                resolve(row)
+            })
+        })
+    })
+}
+
+exports.addWarn = function(steamID, warnConent) {
+    return new Promise((resolve, reject) => {
+        f.log(`ADDING ID: ${warnConent.warnid}`)
+        f.log(`REASON: ${warnConent.grund}`)
+        if (warnConent.extra) {
+            db.exec(`INSERT INTO "main"."warns"("id","warnid","name","grund","punkte","createdAt","by","byName","type","extra") VALUES ('${warnConent.id.toString().replaceAll("'", "''")}',${parseInt(warnConent.warnid)},'${warnConent.name.toString().replaceAll("'", "''")}','${warnConent.grund.toString().replaceAll("'", "''")}',${parseFloat(warnConent.punkte)},${parseInt(warnConent.createdAt)},'${warnConent.by.toString().replaceAll("'", "''")}','${warnConent.byName.toString().replaceAll("'", "''")}','${warnConent.type.toString().replaceAll("'", "''")}','${warnConent.extra.toString().replaceAll("'", "''")}');`, (err) => {
+                if (err) {
+                    f.log(`SQLERR: ${err.message}\nSQL COMMAND: INSERT INTO "main"."warns"("id","warnid","name","grund","punkte","createdAt","by","byName","type","extra") VALUES ('${warnConent.id.toString().replaceAll("'", "''")}',${parseInt(warnConent.warnid)},'${warnConent.name.toString().replaceAll("'", "''")}','${warnConent.grund.toString().replaceAll("'", "''")}',${parseFloat(warnConent.punkte)},${parseInt(warnConent.createdAt)},'${warnConent.by.toString().replaceAll("'", "''")}','${warnConent.byName.toString().replaceAll("'", "''")}','${warnConent.type.toString().replaceAll("'", "''")}','${warnConent.extra.toString().replaceAll("'", "''")}');`)
+                    reject(err)
+                    return
+                }
+                resolve()
+            })
+        } else {
+            db.exec(`INSERT INTO "main"."warns"("id","warnid","name","grund","punkte","createdAt","by","byName","type","extra") VALUES ('${warnConent.id.toString().replaceAll("'", "''")}',${parseInt(warnConent.warnid)},'${warnConent.name.toString().replaceAll("'", "''")}','${warnConent.grund.toString().replaceAll("'", "''")}',${parseFloat(warnConent.punkte)},${parseInt(warnConent.createdAt)},'${warnConent.by.toString().replaceAll("'", "''")}','${warnConent.byName.toString().replaceAll("'", "''")}','${warnConent.type.toString().replaceAll("'", "''")}',NULL);`, (err) => {
+                if (err) {
+                    f.log(`SQLERR: ${err.message}\nSQL COMMAND: INSERT INTO "main"."warns"("id","warnid","name","grund","punkte","createdAt","by","byName","type","extra") VALUES ('${warnConent.id.toString().replaceAll("'", "''")}',${parseInt(warnConent.warnid)},'${warnConent.name.toString().replaceAll("'", "''")}','${warnConent.grund.toString().replaceAll("'", "''")}',${parseFloat(warnConent.punkte)},${parseInt(warnConent.createdAt)},'${warnConent.by.toString().replaceAll("'", "''")}','${warnConent.byName.toString().replaceAll("'", "''")}','${warnConent.type.toString().replaceAll("'", "''")}',NULL);`)
+                    reject(err)
+                    return
+                }
+                resolve()
+            })
+        }
+    })
+}
+
+exports.localization = function(category, string, translationString, args) {
     const lang = f.config().bot.lang
     const localization = require(`./files/strings/${lang}_lang.json`)
     try {
         let cat
-        for(let attributename in localization){
+        for (let attributename in localization) {
             if (attributename == category.toLowerCase()) {
                 cat = localization[attributename]
                 break;
@@ -61,56 +119,30 @@ exports.localization = function (category, string, translationString, args) {
             "description": "NO_EXPORTS"
         }
         if (!translate) return `NO_TRANSLATION`
-        
+
         if (!args) return translate;
-        
+
         for (let index = 0; index < args.length; index++) {
             translate = translate.replace(`%${index}`, args[index])
         }
 
         return translate;
     } catch (error) {
-        f.error(error,"functions.js",true)
+        f.error(error, "functions.js", true)
         return "TRANSLATION_ERROR"
     }
 }
 
-exports.config = function (config) {
+exports.config = function(config) {
     try {
         return (JSON.parse(fs.readFileSync("./files/important files/config.json")))
     } catch {
-        f.log("Error: Config file missing or damaged, using hardcoded config.", 3)
-        const config = {
-            "bot": {
-                "version": "2.4.6",
-                "Authors": "Simyon#6969, JoshuaZacek#4354",
-                "generalPrefix": "!",
-                "description": "The bot for the discord of JCIgaming",
-            },
-            "special": {
-                "owner": "327840918482714626"
-            },
-            "messageColours": {
-                "info": "0x0099ff",
-                "warn": "0xf54242",
-                "done": "0x00ff95",
-                "mod": "0xeb9b34",
-                "member": "0x923afc"
-            },
-            "commands": {
-                "categories": [
-                    "general",
-                    "moderation",
-                    "fun",
-                    "server"
-                ]
-            }
-        }
-        return config;
+        f.log("Error: Config file missing or damaged", 3)
+        return {}
     }
 }
 
-exports.execute = function (command, message, client, prefix, args) {
+exports.execute = function(command, message, client, prefix, args) {
     try {
         const commandFile = require(`./commands/${command}.js`) // Get the command file
         f.log(`Command execution reqeusted. Command: ${commandFile['name']}`)
@@ -134,7 +166,7 @@ exports.execute = function (command, message, client, prefix, args) {
 exports.sleep = function(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-exports.embed = function (channel, title, colour, message, returnEmbedOnly) {
+exports.embed = function(channel, title, colour, message, returnEmbedOnly) {
     if (!returnEmbedOnly) {
         const embed = new discord.MessageEmbed()
             .setTitle(title)
@@ -152,7 +184,7 @@ exports.embed = function (channel, title, colour, message, returnEmbedOnly) {
     }
 }
 
-exports.error = function (err, customFileName, sendConsoleLog) {
+exports.error = function(err, customFileName, sendConsoleLog) {
     try {
         let error = `\n${err.code}\n\n${err.stack}` // Get the error and the error stacktrace
         let date = new Date() // The date when the error occured
@@ -169,7 +201,7 @@ exports.error = function (err, customFileName, sendConsoleLog) {
     }
 }
 
-exports.log = function (log, customStackNum, override, msgOverride) {
+exports.log = function(log, customStackNum, override, msgOverride) {
     let stackNum = 2
     if (customStackNum) stackNum = customStackNum;
     let lineNumber = new Error().stack.split("at ")[stackNum].trim()
@@ -189,7 +221,7 @@ exports.log = function (log, customStackNum, override, msgOverride) {
     }
 }
 
-exports.getServerConfig = function (guildID) {
+exports.getServerConfig = function(guildID) {
     try {
         let file = JSON.parse(fs.readFileSync(`./files/serverConfigs/${guildID}.json`))
         return file;
@@ -198,6 +230,6 @@ exports.getServerConfig = function (guildID) {
     }
 }
 
-exports.randomInt = function (min, max) {
+exports.randomInt = function(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
