@@ -1,4 +1,3 @@
-// Imports
 const fs = require("fs") // Filesystem
 const discord = require("discord.js") // discord.js.... you should know this
 const colors = require('colours') // used to print custom colours in the terminal
@@ -202,8 +201,9 @@ if (returnBoot) console.log("Boot return.")
 
 console.log("Look into the readme for launch options!")
 console.log("Starting bot...")
-const client = new discord.Client({
-    intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.DIRECT_MESSAGES, discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS]
+global.client = new discord.Client({
+    intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.DIRECT_MESSAGES, discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS],
+    partials: ["CHANNEL"]
 }); // discord client
 
 console.log("Deleting error files...")
