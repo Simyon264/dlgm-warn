@@ -15,7 +15,7 @@ module.exports = {
     alias: ["e"],
     cooldown: 1,
     run: function (message, prefix, args, client) {
-        if (message.author.id == f.config().special.owner) {
+        if (f.config().special.owners.includes(message.author.id)) {
             // I have no idea how this works
             const args = message.content.split(" ").slice(1);
             const clean = text => {

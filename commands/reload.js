@@ -13,7 +13,7 @@ module.exports = {
     alias: [],
     cooldown: 1,
     run: async function (message, prefix, args, client) {
-        if (message.author.id == f.config().special.owner) {
+        if (f.config().special.owners.includes(message.author.id)) {
             console.log('Registering Commands...')
             const data = JSON.parse(fs.readFileSync("./files/important files/slashcommands.json"))
             const command = await client.guilds.cache.get(f.config().bot.slashcommandServerId).commands.set(data);
