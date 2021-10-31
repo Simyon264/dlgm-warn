@@ -62,7 +62,6 @@ module.exports = {
                 .setColor(0x00AE86)
                 .setFooter(f.localization("slashcommands","getwarn","footer",[idObj.obj.warnid]))
                 .addField(f.localization("slashcommands", "getwarn", "field1t"), f.localization("slashcommands", "getwarn", "field1", [idObj.obj.name.trim()]))
-                .addField("Punkte:",`*${idObj.obj.punkte.toString()}*`)
                 .addField(f.localization("slashcommands","getwarn","field2t"), f.localization("slashcommands","getwarn","field2",[idObj.obj.id.trim(), type]))
                 .addField(f.localization("slashcommands","getwarn","field3t"), f.localization("slashcommands","getwarn","field3",[idObj.obj.grund.toString().trim()]))
                 .addField(f.localization("slashcommands", "getwarn", "field4t"), f.localization("slashcommands", "getwarn", "field4", [idObj.obj.punkte.toString().trim()]))
