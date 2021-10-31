@@ -30,6 +30,9 @@
     "member": "0x923afc"
   },
   "commands": {
+    "disable": [
+
+    ],
     "categories": [
       "general",
       "moderation",
