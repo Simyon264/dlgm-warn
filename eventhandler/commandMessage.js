@@ -22,6 +22,7 @@ function error_handler(err, type, message) {
 function runCMD(commandFile, guildConfig, message, colourWarn, prefix, args, client) {
     try {
         f.log(`Command execution reqeusted. Command: ${commandFile['name']}`)
+        if (f.config().commands.disable.includes(commandFile.name)) return message.reply("Dieser Befehl ist deaktiviert.")
         const commandName = commandFile['name']
         const isMod = commandFile['modcommand']
         const comandCooldown = commandFile['cooldown']

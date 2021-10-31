@@ -1,3 +1,4 @@
-Version 2.2.7
-- Commands zu DB umgewandelt.
-- Besserer Search Command.
+Version 2.3.7
+- Bug fixes.
+- Custom DM shell hinzugefügt
+- Commands kann man nun austellen

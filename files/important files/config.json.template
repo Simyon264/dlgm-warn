@@ -16,7 +16,11 @@
     ]
   },
   "special": {
-    "owner": ""
+    "owners": [
+      ""
+    ],
+    "enableCmd": true,
+    "allowUnsafeFilepaths": false
   },
   "messageColours": {
     "info": "0x0099ff",
@@ -26,6 +30,9 @@
     "member": "0x923afc"
   },
   "commands": {
+    "disable": [
+
+    ],
     "categories": [
       "general",
       "moderation",

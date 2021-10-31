@@ -17,7 +17,7 @@ module.exports = {
             let admin = false // Set admin block to false
             if (args.length == 3) { // If admin block was specifed
                 f.log('Admin block detected.')
-                if (message.author.id == f.config().special.owner) { // Perms check for owner
+                if (f.config().special.owners.includes(message.author.id)) { // Perms check for owner
                     if (args[2] == "true") { // If it was true, set admin block to true
                         admin = true
                         f.log('Admin block is now true')

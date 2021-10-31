@@ -25,6 +25,12 @@ module.exports = {
             let date = new Date(0)
             date.setUTCSeconds(utcSeconds / 1000)
             
+            const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000)
+
+            let expired = ""
+
+            if (idObj.obj.createdAt < timestamp) expired = "\n__**Diese Verwarnung ist abgelaufen**__"
+
             let type = ""
 
             if (idObj.obj.type == "steam") type = "@steam"
@@ -33,16 +39,15 @@ module.exports = {
             const embed = new discord.MessageEmbed()
                 .setColor(0x00AE86)
                 .setTitle(f.localization("slashcommands","getwarn","usure",[idObj.obj.name.trim()]))
-                .setDescription(f.localization("slashcommands","getwarn","description",[time(date, 'R')]))
+                .setDescription(f.localization("slashcommands","getwarn","description",[time(date, 'R'),expired]))
                 .setFooter(f.localization("slashcommands","getwarn","footer",[idObj.obj.warnid]))
                 .addField(f.localization("slashcommands", "getwarn", "field1t"), f.localization("slashcommands", "getwarn", "field1", [idObj.obj.name.trim()]))
-                .addField("Punkte:",`*${idObj.obj.punkte.toString()}*`)
                 .addField(f.localization("slashcommands","getwarn","field2t"), f.localization("slashcommands","getwarn","field2",[idObj.obj.id.toString().trim(), type]))
                 .addField(f.localization("slashcommands","getwarn","field3t"), f.localization("slashcommands","getwarn","field3",[idObj.obj.grund.toString().trim()]))
                 .addField(f.localization("slashcommands", "getwarn", "field4t"), f.localization("slashcommands", "getwarn", "field4", [idObj.obj.punkte.toString().trim()]))
                 .addField(f.localization("slashcommands", "getwarn", "field5t"), f.localization("slashcommands", "getwarn", "field5", [idObj.obj.by, idObj.obj.byName]))
             if (idObj.obj.extra) embed.addField(f.localization("slashcommands", "getwarn", "field6t"), f.localization("slashcommands", "getwarn", "field6", [idObj.obj.extra.toString().trim()]))
-            
+
             interaction.editReply({ content: "** **", embeds: [embed]})
             
         } else return interaction.editReply(f.localization("slashcommands", "getwarns", "noperms"))

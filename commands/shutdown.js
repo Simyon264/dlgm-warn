@@ -14,7 +14,7 @@ module.exports = {
     cooldown: 1,
     alias: ["sd"],
     run: function (message, prefix, args, client) {
-        if (message.author.id == functions.config().special.owner) {
+        if (f.config().special.owners.includes(message.author.id)) {
             message.channel.send("Shutting down! :clap:").then(function () {
                 console.log("Discord command: Shutdown")
                 process.emit('SIGINT')

@@ -154,7 +154,7 @@
       "wait": "Bitte warten...",
       "notfound": "Keine Verwarnung gefunden unter `%0`",
       "usure": "Verwarnung für `%0`",
-      "description": "Diese Verwarnung war %0.",
+      "description": "Diese Verwarnung war %0.%1",
       "footer": "❯ ID: %0",
       "field1t": "❯ Name:",
       "field1": "*%0*",
