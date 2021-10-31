@@ -16,7 +16,11 @@
     ]
   },
   "special": {
-    "owner": ""
+    "owners": [
+      ""
+    ],
+    "enableCmd": true,
+    "allowUnsafeFilepaths": false
   },
   "messageColours": {
     "info": "0x0099ff",
