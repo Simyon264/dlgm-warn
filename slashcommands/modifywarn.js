@@ -80,8 +80,7 @@ module.exports = {
                     switch (i.customId) {
                         case "yes":
                             deleted = true
-
-                            db.exec(`UPDATE warns SET ${change} = "${newVaule}" WHERE warnid = ${id}`, (err) => {
+                            db.run(`UPDATE warns SET ${change} = ? WHERE warnid = ${id}`, newVaule ,(err) => {
                                 if (err) {
                                     interaction.editReply({
                                         content: `Ein Fehler ist aufgetreten.\n${err.message}\nCOMMAND: UPDATE warns SET ${change} = "${newVaule}" WHERE warnid = ${id};`,
