@@ -85,6 +85,21 @@ exports.addWarn = function(steamID, warnConent) {
     })
 }
 
+exports.addNote = function(id, noteContent) {
+    return new Promise((resolve, reject) => {
+        f.log(`ADDING ID: ${noteContent.id}`)
+        f.log(`NOTE: ${noteContent.note}`)
+        db.exec(`INSERT INTO "main"."notes"("id","note","byname","byid") VALUES (?,?,?,?);`,[id,noteContent,noteContent.byName, noteContent.byid] ,(err) => {
+            if (err) {
+                f.log(`SQLERR: ${err.message}\nSQL COMMAND: INSERT INTO "main"."notes"("id","note","byname","byid") VALUES (?,?,?,?);`)
+                reject(err)
+                return
+            }
+            resolve()
+        })
+    })
+}
+
 exports.localization = function(category, string, translationString, args) {
     const lang = f.config().bot.lang
     const localization = require(`./files/strings/${lang}_lang.json`)
