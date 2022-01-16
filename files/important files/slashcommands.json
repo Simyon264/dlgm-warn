@@ -151,23 +151,5 @@
         "required": true
       }
     ]
-  },
-  {
-    "name": "addnote",
-    "description": "Füge eine Notiz zu einer Person hinzu",
-    "options": [
-      {
-        "name": "id",
-        "description": "Die ID von der Person.",
-        "type": "STRING",
-        "required": true
-      },
-      {
-        "name": "note",
-        "description": "Die Notiz die du hinzufügen möchstes.",
-        "type": "STRING",
-        "required": true
-      }
-    ]
   }
 ]

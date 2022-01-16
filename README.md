@@ -24,7 +24,6 @@ Wanna disable the console? Or have no colours? Well, we have launch options!
 - `logconsole` - Writes all console output into the log file.
 - `showfilestart` - Shows the file start.
 - `nocolour` - Disables colour in the console.
-- `createnotedb` - Creates the Note Database.
 
 To enable one of these just have it in the args when starting the bot. So:
 `node bot.js [launch options]`

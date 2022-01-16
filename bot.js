@@ -100,14 +100,6 @@ const errdelete = true
 for (let index = 0; index < args.length; index++) {
     //This will just set some vars to true 
     switch (args[index]) {
-        case "createnotedb":
-            returnBoot = true;
-            db.exec('CREATE TABLE "notes" ("id"	TEXT,"note"	TEXT,"byname"	TEXT,"byid"	TEXT,"expiresAt"	INTEGER)', err => {
-                if (err) {
-                    console.log(colors.red("ERROR: ") + "Can't create Note Table.\n" + err.message)
-                } else console.log("Created Note Database.")
-            });
-        break;
         case "resetdb":
             returnBoot = true
             db.exec('DROP TABLE "main"."warns";', (err) => {
