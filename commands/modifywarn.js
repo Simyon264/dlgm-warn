@@ -98,7 +98,7 @@ module.exports = {
                                         embeds: [],
                                         components: []
                                     })
-                                    return
+                                    return;
                                 }
                                 embed.setDescription(`**Verwarnung für \`${oldName.toString().trim()}\`**\n\n\`${old.toString().trim()}\` wurde zu \`${idObj.obj[change].toString().trim()}\`\n\n`)
                                 embed.setTitle("Verwarnung geändert!")
