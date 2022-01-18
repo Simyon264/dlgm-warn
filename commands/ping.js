@@ -25,7 +25,7 @@ module.exports = {
         } else {
             colour = 0x26e08d
         }
-        message.channel.send(f.localization("commands","ping","ping")).then((m) => { // Send pinging message and edit it to the embed
+        message.reply(f.localization("commands","ping","ping")).then((m) => { // Send pinging message and edit it to the embed
             // Genereate embed
             let embed = new discord.MessageEmbed()
                 .setTitle(f.localization("commands","ping","title"))
