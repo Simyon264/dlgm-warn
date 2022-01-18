@@ -1,6 +1,6 @@
 {
   "name": "dlgmwarn",
-  "version": "2.3.7",
+  "version": "2.4.7",
   "description": "",
   "main": "bot.js",
   "scripts": {
@@ -13,6 +13,6 @@
     "@discordjs/builders": "^0.6.0",
     "colours": "^0.6.0-2",
     "discord.js": "^13.0.1",
-    "sqlite3": "^4.2.0"
+    "sqlite3": "^5.0.2"
   }
 }

@@ -91,14 +91,14 @@ module.exports = {
                     switch (i.customId) {
                         case "yes":
                             deleted = true
-                            db.exec(`UPDATE warns SET ${change} = "${newVaule}" WHERE warnid = ${id}`, (err) => {
+                            db.run(`UPDATE warns SET ${change} = ? WHERE warnid = ${id}`, newVaule ,(err) => {
                                 if (err) {
-                                    interaction.editReply({
+                                    newMessage.edit({
                                         content: `Ein Fehler ist aufgetreten.\n${err.message}\nCOMMAND: UPDATE warns SET ${change} = "${newVaule}" WHERE warnid = ${id};`,
                                         embeds: [],
                                         components: []
                                     })
-                                    return
+                                    return;
                                 }
                                 embed.setDescription(`**Verwarnung für \`${oldName.toString().trim()}\`**\n\n\`${old.toString().trim()}\` wurde zu \`${idObj.obj[change].toString().trim()}\`\n\n`)
                                 embed.setTitle("Verwarnung geändert!")

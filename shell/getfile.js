@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require("fs")
+const f = require("../functions.js")
 
 module.exports = {
     help: "Hohle dir eine Datei vom Bot.",
