@@ -19,9 +19,9 @@ exports.getWarns = function(id) {
                     reject("1")
                     return
                 }
-                console.log(row)
                 resolve(row)
             })
+            f.log(`ALL WARNS REQEUSTED FOR: ${id}`)
         })
     })
 }
@@ -35,9 +35,9 @@ exports.search = function(search) {
                     reject("1")
                     return
                 }
-                // console.log(row)
                 resolve(row)
             })
+            f.log(`SEARCH FOR: \"${search}\"`)
         })
     })
 }
@@ -52,7 +52,6 @@ exports.getWarn = function(warnid) {
                     return
                 }
                 f.log("GET REQUEST FOR WARNID: " + warnid)
-                // console.log(row)
                 resolve(row)
             })
         })
