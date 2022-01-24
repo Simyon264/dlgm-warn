@@ -202,7 +202,8 @@ if (returnBoot) console.log("Boot return.")
 console.log("Look into the readme for launch options!")
 console.log("Starting bot...")
 global.client = new discord.Client({
-    intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.DIRECT_MESSAGES, discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS],
+    //intents: [discord.Intents.FLAGS.GUILDS, discord.Intents.FLAGS.GUILD_MESSAGES, discord.Intents.FLAGS.DIRECT_MESSAGES, discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, discord.Intents.FLAGS.GUILD_VOICE_STATES],
+    intents: new discord.Intents(32767),
     partials: ["CHANNEL"]
 }); // discord client
 
@@ -250,6 +251,35 @@ function start() {
             if (showfilestart) console.log(colors.yellow(`Started: ${files[i]}`));
             event['run'](client);
         }
+
+        // Modules start
+        console.log(colors.yellow("Starting modules!"))
+        files = fs.readdirSync("./modules/");
+
+        for (let i = 0; i < files.length; i++) {
+            let module = require(`./modules/${files[i]}`);
+            
+            // Validating config
+            let moduleConfig = module['config']
+            let curConfig = f.config();
+
+            if (!curConfig.modules.hasOwnProperty(module.name)) {
+                curConfig.modules[module.name] = moduleConfig;
+                fs.writeFileSync("./files/important files/config.json", JSON.stringify(curConfig,null,"\t"));
+            }
+
+            // TO RESET: DELETE MODULE CONFIG
+
+            if (showfilestart) console.log(colors.yellow(`Started: ${module.name} by ${module.author}`));
+            module['module'](client, curConfig.modules[module.name]);
+        }
+
+        if (files.length == 1) {
+            console.log(`Started`.green + ` ${files.length} `.cyan + `module!`.green)
+        } else {
+            console.log(`Started`.green + ` ${files.length} `.cyan + `modules!`.green)
+        }
+
         console.log(colors.green("All files started, logging in!"))
 
         try {
