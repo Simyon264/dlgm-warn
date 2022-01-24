@@ -39,5 +39,6 @@
       "warns",
       "server"
     ]
-  }
+  },
+  "modules": {}
 }

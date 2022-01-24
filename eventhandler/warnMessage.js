@@ -72,7 +72,9 @@ module.exports = {
 
 
                 // Check if person has any warns, if yes post them.
-                const lastWarn = await f.getWarns(steamID);
+                let lastWarn = await f.getWarns(steamID);
+                lastWarn = lastWarn.reverse();
+                
                 let hasEmbed = false;
                 const embed = new Discord.MessageEmbed()
                     .setColor(0x00AE86)
@@ -90,7 +92,7 @@ module.exports = {
                         }
                     }
 
-                    embed.setTitle("Letze Verwarnung.")
+                    embed.setTitle("Letzte Verwarnung.")
                     embed.setDescription(`Alle Punkte: \`${totalPoints}\`\nPunkte: \`${points}\``)
                     let utcSeconds = lastWarn[0].createdAt
                     let date = new Date(0)
@@ -115,7 +117,7 @@ module.exports = {
                 if (warns == "1") return message.reply(f.localization("eventhandlers", "warnMessage", "nowarns"))
                 
 
-                const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000)
+                const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000) // Time but -30 days
                 let points = 0
                 let totalPoints = 0
                 for (let index = 0; index < warns.length; index++) {
