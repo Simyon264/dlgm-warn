@@ -117,7 +117,7 @@ module.exports = {
                 if (warns == "1") return message.reply(f.localization("eventhandlers", "warnMessage", "nowarns"))
                 
 
-                const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000)
+                const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000) // Time but -30 days
                 let points = 0
                 let totalPoints = 0
                 for (let index = 0; index < warns.length; index++) {
