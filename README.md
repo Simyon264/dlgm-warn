@@ -1,5 +1,7 @@
 # DLGM-Warnbot
 
+Join the [Discord](https://discord.gg/PAPf95aQPp)
+
 Warn-bot for DLGM.
 
 ## How to install.
