@@ -34,20 +34,26 @@ module.exports = {
                 // console.log(sortby)
 
                 for (let index = 0; index < warns.length; index++) {
-                    // console.log(warns[index]["createdAt"])
                     if (warns[index]["createdAt"] < timestamp) {
                         totalPoints = totalPoints + parseFloat(warns[index]["punkte"].toString().replace(",", "."))
                         if (sortby == "validonly") continue;
                         warns[index].expired = true
+                        if (warns[index].extra) {
+                            if (warns[index].extra.includes("HIDDEN")) continue;
+                        }
                         items.push(warns[index])
                     } else {
                         points = points + parseFloat(warns[index]["punkte"].toString().replace(",", "."))
                         totalPoints = totalPoints + parseFloat(warns[index]["punkte"].toString().replace(",", "."))
                         if (sortby == "badonly") continue;
                         warns[index].expired = false
+                        if (warns[index].extra) {
+                            if (warns[index].extra.includes("HIDDEN")) continue;
+                        }
                         items.push(warns[index])
                     }
                 }
+                
                 if (sortby == "date") items = items.reverse()
 
                 if (items.length == 0) return interaction.editReply("Keine Ergebnisse unter den aktuellen Filtern gefunden.")
