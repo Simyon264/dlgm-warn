@@ -32,9 +32,15 @@ module.exports = {
             let finds = []
             const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000)
             file = await f.search(name)
-            // console.log(file)
+
             file.forEach(element => {
-                finds.push(element)
+                let hidden = false
+                if (element.extra) {
+                    if (element.extra.includes("HIDDEN")) hidden = true;
+                }
+                if (!hidden) {
+                    finds.push(element)
+                }
             });
 
             const maxItemsForPage = 5
