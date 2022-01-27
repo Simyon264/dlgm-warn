@@ -1,4 +1,3 @@
-Version 2.3.7
-- Bug fixes.
-- Custom DM shell hinzugefügt
-- Commands kann man nun austellen
+Version 2.6.7
+- Report Verwarnungen.
+- Dinge idk
