@@ -5,6 +5,10 @@ const readline = require("readline") // used for user to input bot token
 const f = require('./functions.js') // general functions
 const sqlite3 = require('sqlite3').verbose() // database
 
+if (!fs.existsSync("./files/log")) fs.mkdirSync("./files/log")
+if (!fs.existsSync("./files/warns")) fs.mkdirSync("./files/warns")
+if (!fs.existsSync("./files/cache")) fs.mkdirSync("./files/cache")
+
 if (!fs.existsSync("./files/warns/warns.db")) fs.writeFileSync("./files/warns/warns.db", "")
 
 global.db = new sqlite3.Database('./files/warns/warns.db', sqlite3.OPEN_READWRITE, (err) => {
@@ -23,10 +27,6 @@ global.noconsole = false;
 global.showfilestart = false;
 global.nocolour = false;
 global.logQueue = []
-
-if (!fs.existsSync("./files/log")) fs.mkdirSync("./files/log")
-if (!fs.existsSync("./files/warns")) fs.mkdirSync("./files/warns")
-if (!fs.existsSync("./files/cache")) fs.mkdirSync("./files/cache")
 
 global.clearErrorLog = async function(why) {
     if (typeof why == "undefined") return
@@ -256,6 +256,7 @@ function start() {
         console.log(colors.yellow("Starting modules!"))
         files = fs.readdirSync("./modules/");
 
+        let started = 0
         for (let i = 0; i < files.length; i++) {
             let module = require(`./modules/${files[i]}`);
             
@@ -270,21 +271,24 @@ function start() {
 
             // TO RESET: DELETE MODULE CONFIG
 
-            if (showfilestart) console.log(colors.yellow(`Started: ${module.name} by ${module.author}`));
-            module['module'](client, curConfig.modules[module.name]);
+            if (curConfig.modules[module.name].enabled) {
+                if (showfilestart) console.log(colors.yellow(`Started: ${module.name} by ${module.author}`));
+                module['module'](client, curConfig.modules[module.name]);
+                started++
+            }
         }
 
-        if (files.length == 1) {
-            console.log(`Started`.green + ` ${files.length} `.cyan + `module!`.green)
+        if (started == 1) {
+            console.log(`Started`.green + ` ${started} `.cyan + `module!`.green)
         } else {
-            console.log(`Started`.green + ` ${files.length} `.cyan + `modules!`.green)
+            console.log(`Started`.green + ` ${started} `.cyan + `modules!`.green)
         }
 
         console.log(colors.green("All files started, logging in!"))
 
         try {
             // Login using token
-            client.login(token)
+            client.login(token.trim())
                 .then(() => {
                     // Stop readline
                     rl.close()
