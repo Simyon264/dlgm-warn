@@ -75,6 +75,14 @@ module.exports = {
                 let lastWarn = await f.getWarns(steamID);
                 lastWarn = lastWarn.reverse();
                 
+                for (let index = 0; index < lastWarn.length; index++) {
+                    if (lastWarn[index].extra) {
+                        if (lastWarn.extra.contains("HIDDEN")) {
+                            lastWarn.splice(index,1)
+                        }
+                    }
+                }
+
                 let hasEmbed = false;
                 const embed = new Discord.MessageEmbed()
                     .setColor(0x00AE86)
