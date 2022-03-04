@@ -13,12 +13,12 @@ module.exports = {
     alias: ["dw"],
     cooldown: 1,
     run: async function(message, prefix, args) {
-        if (!(args.length == 2)) return message.reply("Bitte gebe eine Warn ID an.")
+        if (!(args.length == 2)) return message.reply(f.localization("slashcommands","deletewarn","nowarnid"))
         if (message.member.roles.cache.has(f.config().bot.warnRoleId)) {
-            const newMessage = await message.reply("Bitte warten...")
+            const newMessage = await message.reply(f.localization("slashcommands","deletewarn","wait"))
             const id = parseInt(args[1])
 
-            if (isNaN(id)) return newMessage.edit("Bitte gebe eine Valide WarnID an.")
+            if (isNaN(id)) return newMessage.edit(f.localization("slashcommands","deletewarn","notvalid"))
 
             let idObj = {
                 found: false,
@@ -87,7 +87,7 @@ module.exports = {
                                     return
                                 }
                                 deleted = true
-                                embed.setTitle("Verwarnung gelöscht.")
+                                embed.setTitle(f.localization("slashcommands","deletewarn","deleted"))
                                 newMessage.edit({ embeds: [embed], components: [] })
                                 collector.stop()
                             })

@@ -42,7 +42,7 @@ module.exports = {
 
             let expired = ""
 
-            if (idObj.obj.createdAt < timestamp) expired = "\n__**Diese Verwarnung ist abgelaufen**__"
+            if (idObj.obj.createdAt < timestamp) expired = f.localization("slashcommands", "getwarn", "expired")
 
             let type = ""
 
