@@ -13,14 +13,23 @@ module.exports = {
     module: async function (client, config) {
         if (!config.enabled) return;
         f.log("Channel watcher watching 👀!");
-        process.on("cw_ping", async function channel_watcher_ping(args1) {
+        process.on("cw_ping", async function channel_watcher_ping(args1) {    
             const channel = await client.channels.fetch(config.channel_id)
             channel.send(config.message.replace("person", args1))
         })
 
+        async function startCountdown(user) {
+            await f.sleep(5000)
+            if (user.voice.channelId == config.watch_channel_id) {
+                process.emit("cw_ping", user.id)
+            }
+        }
+        
+        // process.emit("cw_ping", newState.id)
+
         client.on("voiceStateUpdate", async (oldState, newState) => {
             if (newState.channelId == config.watch_channel_id) {
-                process.emit("cw_ping", newState.id)
+                startCountdown(newState.member)
             }
         })
     }

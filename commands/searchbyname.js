@@ -16,7 +16,7 @@ module.exports = {
     alias: ["search"],
     cooldown: 1,
     run: async function(message, prefix, args) {
-        if (!(args.length >= 2)) return message.reply("Bitte gebe einen Namen ein zum suchen.")
+        if (!(args.length >= 2)) return message.reply(f.localization("slashcommands", "searchbyname", "noargs"))
         if (message.member.roles.cache.has(f.config().bot.warnRoleId)) {
             args.splice(0,1)
             args = args.join(" ")
@@ -46,11 +46,11 @@ module.exports = {
             const maxItemsForPage = 5
             const maxpages = Math.ceil(file.length / maxItemsForPage)
 
-            if (finds.length == 0) return newMessage.edit(`Keine Verwarnungen unter \`${name}\` gefunden.`)
+            if (finds.length == 0) return newMessage.edit(f.localization("slashcommands", "searchbyname", "nowarns", [name]))
 
             function update() {
                 const embed = new discord.MessageEmbed()
-                    .setTitle(`Verwarnungen für \`${name}\``)
+                    .setTitle(f.localization("slashcommands", "searchbyname", "title",[name]))
                     .setColor(0x00AE86)
                     .setFooter(f.localization("slashcommands", "getwarns", "page", [page, maxpages]))
                 
@@ -69,14 +69,14 @@ module.exports = {
                             if (finds[i].type == "steam") type = "@steam"
                             if (finds[i].type == "discord") type = "@discord"
 
-                            if (finds[i].createdAt < timestamp) expired = "__**Diese Verwarnung ist abgelaufen**__\n"
+                            if (finds[i].createdAt < timestamp) expired = f.localization("slashcommands", "searchbyname", "expired")
 
                             let extra = ""
-                            if (finds[i].extra) extra = `Extra: *${finds[i].extra.trim()}*\n`
+                            if (finds[i].extra) extra = f.localization("slashcommands", "searchbyname", "extra",[finds[i].extra.trim()])
 
                             let newName = f.replaceAllCaseInsensitve(name, `**${name}**`,finds[i].name)
 
-                            embed.addField(`Verwarnung ${time(date, "R")}`, `${expired.trim()}\nName: *${newName.trim()}*\nID: *${finds[i].id.toString().trim()}${type}*\nGrund: *${finds[i].grund.trim()}*\n${extra}Warn ID: *${finds[i].warnid}*\nPunkte: *${finds[i].punkte}*`)
+                            embed.addField(f.localization("slashcommands", "searchbyname", "field",[time(date,"R"),expired.trim(),newName.trim(),finds[i].id.toString().trim(),type,finds[i].grund.trim(),extra,finds[i].warnid,finds[i].punkte]))
                             itemsCount++
                         }
                     } else {

@@ -11,14 +11,14 @@ module.exports = {
     alias: ["mw"],
     cooldown: 1,
     run: async function(message, prefix, args) {
-        if (!(args.length >= 4)) return message.reply("Bitte gebe den Befehl richtig ein.")
+        if (!(args.length >= 4)) return message.reply(f.localization("slashcommands","modifywarn","noargs"))
         if (message.member.roles.cache.has(f.config().bot.warnRoleId)) {
             const id = parseInt(args[1])
             const change = args[2].toLowerCase()
             args.splice(0,3)
             const newVaule = args.join(" ")
 
-            if (isNaN(id)) return message.reply("Bitte gebe eine WarnID an.")
+            if (isNaN(id)) return message.reply(f.localization("slashcommands","modifywarn","nowarndid"))
 
             let idObj = {
                 found: false,
@@ -35,19 +35,19 @@ module.exports = {
 
             const oldName = idObj.obj.name
             let old = idObj.obj[change]
-            if (old == null) old = "Nichts"
+            if (old == null) old = f.localization("slashcommands","modifywarn","nothing")
 
             switch (change) {
                 case "punkte":
                     const newNumber = Math.round(parseFloat(newVaule.toString().replace(",", ".")) * 10) / 10
-                    if (isNaN(newNumber)) return message.reply("Bitte gebe eine Nummer ein.")
+                    if (isNaN(newNumber)) return message.reply(f.localization("slashcommands","modifywarn","isNaN"))
                     idObj.obj["punkte"] = newNumber
                     break;
                 default:
                     let validArr = ["punkte","grund","extra","name","id"]
                     if (validArr.some(v => change.includes(v))) {
                         idObj.obj[change] = newVaule
-                    } else return message.reply("Bitte wähle einen von den 4 optionen (`Punkte, Grund, Name und extra`) für den Wert der geändert werden soll.") 
+                    } else return message.reply(f.localization("slashcommands","modifywarn","5options")) 
                     break;
             }
             
@@ -57,8 +57,8 @@ module.exports = {
             if (idObj.obj.type == "discord") type = "@discord"
 
             const embed = new discord.MessageEmbed()
-                .setTitle("Verwarnung ändern?")
-                .setDescription(`**Verwarnung für \`${oldName.toString().trim()}\`**\n\n\`${old.toString().trim()}\` wird zu \`${idObj.obj[change].toString().trim()}\`\n\n`)
+                .setTitle(f.localization("slashcommands", "modifywarn", "change"))
+                .setDescription(f.localization("slashcommands", "modifywarn", "desc", [oldName.toString().trim(), old.toString().trim(), idObj.obj[change].toString().trim()]))
                 .setColor(0x00AE86)
                 .setFooter(f.localization("slashcommands","getwarn","footer",[idObj.obj.warnid]))
                 .addField(f.localization("slashcommands", "getwarn", "field1t"), f.localization("slashcommands", "getwarn", "field1", [idObj.obj.name.trim()]))
@@ -100,8 +100,8 @@ module.exports = {
                                     })
                                     return;
                                 }
-                                embed.setDescription(`**Verwarnung für \`${oldName.toString().trim()}\`**\n\n\`${old.toString().trim()}\` wurde zu \`${idObj.obj[change].toString().trim()}\`\n\n`)
-                                embed.setTitle("Verwarnung geändert!")
+                                embed.setDescription(f.localization("slashcommands", "modifywarn", "desc2", [oldName.toString().trim(), old.toString().trim(), idObj.obj[change].toString().trim()]))
+                                embed.setTitle(f.localization("slashcommands","modifywarn","warnchanged"))
                                 newMessage.edit({ embeds: [embed], components: [] })
                                 collector.stop()
                             })
@@ -118,7 +118,7 @@ module.exports = {
 
             collector.on('end', collected => {
                 if (deleted) return
-                embed.setTitle("Verwarnungsänderung abgebrochen.")
+                embed.setTitle(f.localization("slashcommands","modifywarn","cancel"))
                 newMessage.edit({embeds: [embed], components: [] })
             });
 

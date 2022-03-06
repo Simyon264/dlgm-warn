@@ -2,6 +2,8 @@ const f = require("../functions.js")
 const fs = require("fs")
 const shell = require("../eventhandler/shell.js")
 const util = require("util")
+const discord = require("discord.js")
+const fs = require("fs")
 
 module.exports = {
     help: "Exekutiere Code",

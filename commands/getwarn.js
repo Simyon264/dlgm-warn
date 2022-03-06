@@ -15,11 +15,11 @@ module.exports = {
     alias: ["gw"],
     cooldown: 1,
     run: async function(message, prefix, args) {
-        if (args.length != 2) return message.reply("Bitte gebe eine WarnID an.")
+        if (args.length != 2) return message.reply(f.localization("slashcommands", "getwarn", "noargs"))
         if (message.member.roles.cache.has(f.config().bot.warnRoleId)) {
             const sendMessage = await message.reply(f.localization("slashcommands", "getwarn", "wait"))
             const id = parseInt(args[1])
-            if (isNaN(id)) return sendMessage.edit("Bitte gebe eine valide WarnID an.")
+            if (isNaN(id)) return sendMessage.edit(f.localization("slashcommands", "getwarn", "invalidid"))
 
             let idObj = {
                 found: false,
@@ -42,7 +42,7 @@ module.exports = {
 
             let expired = ""
 
-            if (idObj.obj.createdAt < timestamp) expired = "\n__**Diese Verwarnung ist abgelaufen**__"
+            if (idObj.obj.createdAt < timestamp) expired = f.localization("slashcommands", "getwarn", "expired")
 
             let type = ""
 

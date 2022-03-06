@@ -12,15 +12,15 @@ module.exports = {
     alias: ["gws"],
     cooldown: 1,
     run: async function (message, prefix, args) {
-        if (!(args.length >= 2)) return message.reply("Bitte gebe den Befehl richtig ein.")
+        if (!(args.length >= 2)) return message.reply(f.localization("slashcommands", "getwarns", "noargs"))
         if (message.member.roles.cache.has(f.config().bot.warnRoleId)) {
             const steamID = args[1].split("@")[0].replace(" ", "")
             let sortby = "date"
             if (args[2]) {
                 let validArr = ["newest","oldest","onlyvalid","badonly"]
-                if (validArr.some(v => args[2].includes(v))) {
+                if (validArr.some(v => args[2].toLowerCase().includes(v))) {
                     sortby = args[2]
-                } else return message.reply("Bitte wähle einen von den 4 optionen (`Newest, Oldest, Onlyvalid und Badonly`) für die sortierung.") 
+                } else return message.reply(f.localization("slashcommands", "getwarns", "4options")) 
             }
 
             if (steamID.length == 17 || steamID.length == 18) {
@@ -63,12 +63,12 @@ module.exports = {
 
                 if (sortby == "date") items = items.reverse()
 
-                if (items.length == 0) return message.reply("Keine Ergebnisse unter den aktuellen Filtern gefunden.")
+                if (items.length == 0) return message.reply(f.localization("slashcommands", "getwarns", "nowarns"))
 
                 const maxItemsForPage = 5
                 const maxpages = Math.ceil(items.length / maxItemsForPage)
 
-                const newMessage = await message.reply("Bitte warten...")
+                const newMessage = await message.reply(f.localization("slashcommands", "getwarns", "wait"))
 
                 async function update() {
                     const embed = new discord.MessageEmbed()
