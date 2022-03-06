@@ -1,3 +1,2 @@
-Version 2.6.7
-- Report Verwarnungen.
-- Dinge idk
+Version 2.6.8
+- Rechtschreibung gefixt.
