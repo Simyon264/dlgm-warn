@@ -135,11 +135,15 @@
   },
   "slashcommands": {
     "getwarns": {
+      "wait": "Bitte warten...",
+      "noresults": "Keine Ergebnisse unter den aktuellen Filtern gefunden.",
+      "4options": "Bitte wähle einen von den 4 optionen (`newest, oldest, onlyvalid und badonly`) für die sortierung.",
+      "noargs": "Bitte gebe den Befehl richtig ein.",
       "noperms": "Du hast keine Berechtigung um diesen Befehl auszuführen.",
       "title": "Verwarnungen von `%0`",
       "nowarns": "Diese Person hat noch keine Verwarnungen.",
       "invalidsteamid": "Bitte gebe ein valide id an.",
-      "pointsT": "Akutelle Punkte",
+      "pointsT": "Aktuelle Punkte",
       "pointsN": "Alle Punkte",
       "page": "Seite %0 von %1",
       "nobuttons": "<@%0>, du kannst diese Knöpfe nicht nutzen.",
@@ -151,6 +155,8 @@
       "fieldBody": "%0Grund: **%1**\n%6Punkte: **%2**\nModerator: <@%3> (%4)\nID: %5%7"
     },
     "getwarn": {
+      "noargs": "Bitte gebe eine WarnID an.",
+      "invalidid": "Bitte gebe eine valide WarnID an.",
       "wait": "Bitte warten...",
       "notfound": "Keine Verwarnung gefunden unter `%0`",
       "usure": "Verwarnung für `%0`",
@@ -169,12 +175,17 @@
       "field6t": "❯ Extra:",
       "field6": "*%0*",
       "nobuttons": "<@%0>, du kannst diese Knöpfe nicht nutzen.",
-      "cancel": "Verwarnungslöschung abgebrochen."
+      "cancel": "Verwarnungslöschung abgebrochen.",
+      "expired": "\n__**Diese Verwarnung ist abgelaufen**__"
     },
     "addwarn": {
       "invalidsteamid": "Bitte gebe ein valide ID an."
     },
     "deletewarn": {
+      "deleted": "Verwarnung gelöscht.",
+      "nowarnid": "Bitte gebe eine Warn ID an.",
+      "wait": "Bitte warten...",
+      "notvalid": "Bitte gebe eine Valide WarnID an.",
       "nowarn": "Keine Verwarnung gefunden unter `%0`.",
       "usure": "Möchtest du die Verwarnung für `%0` wirklich löschen?",
       "description": "Diese Verwarnung war %0.",
@@ -195,7 +206,25 @@
       "cancel": "Verwarnungslöschung abgebrochen."
     },
     "searchbyname": {
-      "wait": "Bitte warten..."
+      "wait": "Bitte warten...",
+      "noargs": "Bitte gebe einen Namen ein zum suchen.",
+      "nowarns": "Keine Verwarnungen unter `%0` gefunden.",
+      "title": "Verwarnungen von `%0`",
+      "expired": "**__Diese Verwarnung ist abgelaufen!__**\n",
+      "extra": "Extra: *%0*\n",
+      "field": "Verwarnung %0`, `%1\nName: *%2*\nID: *%3%4*\nGrund: *%5*\n%6Warn ID: *%6*\nPunkte: *%7*"
+    },
+    "modifywarn": {
+      "noargs": "Bitte gebe den Befehl richtig ein.",
+      "nowarnid": "Bitte gebe eine Warn ID an.",
+      "nothing": "Nichts",
+      "isNaN": "Bitte gebe eine Nummer ein.",
+      "5options": "Bitte wähle einen von den 5 optionen (`Punkte, Grund, Name, Id und extra`) für den Wert der geändert werden soll.",
+      "change": "Verwarnung ändern?",
+      "desc": "**Verwarnung für `%0`**\n\n`%1` wird zu `%2`\n\n",
+      "desc2": "**Verwarnung für `%0`**\n\n`%1` wurde zu `%2`\n\n",
+      "warnchanged": "Verwarnung geändert!",
+      "cancel": "Verwarnungsänderung abgebrochen."
     }
   },
   "eventhandlers": {
