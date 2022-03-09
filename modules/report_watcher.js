@@ -17,7 +17,7 @@ module.exports = {
             if (msg.channel.id !== config.channel) return;
             if (msg.author.id == client.user.id) return;
             if (msg.embeds.length == 0) return; // No embed
-            const id = msg.embeds[0].fields[6].value.split('@')[0].replace("`","")
+            const id = msg.embeds[0].fields[9].value.split('@')[0].replace("`","")
 
             let warns = await f.getWarns(id);
             if (warns.length == 0) return;
@@ -26,7 +26,7 @@ module.exports = {
             let name = warns[0].name
             const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000)
             
-            if (warns[0].name !== msg.embeds[0].fields[5].value.trim()) {
+            if (warns[0].name !== msg.embeds[0].fields[8].value.trim()) {
                 warnConent = {
                     "id": id,
                     "warnid": parseInt(fs.readFileSync("./files/warns/id.txt", "utf-8")) + 1,
