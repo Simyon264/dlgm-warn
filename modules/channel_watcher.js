@@ -29,6 +29,7 @@ module.exports = {
 
         client.on("voiceStateUpdate", async (oldState, newState) => {
             if (newState.channelId == config.watch_channel_id) {
+                if (oldState.channelId == newState.channelId) return;
                 startCountdown(newState.member)
             }
         })
