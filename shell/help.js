@@ -11,7 +11,7 @@ module.exports = {
             let help = "Hifle:\n";
             dir.forEach(element => {
                 let curElement = require(`../shell/${element}`)
-                help += `${path.basename(element)} - ${curElement.help} - Permission level: ${curElement.permissionLevel}\n\n`
+                help += `${path.parse(element).name} - ${curElement.help} - Permission level: ${curElement.permissionLevel}\n\n`
             });
             resolve(help);
         })
