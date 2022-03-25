@@ -212,7 +212,8 @@
       "title": "Verwarnungen von `%0`",
       "expired": "**__Diese Verwarnung ist abgelaufen!__**\n",
       "extra": "Extra: *%0*\n",
-      "field": "Verwarnung %0`, `%1\nName: *%2*\nID: *%3%4*\nGrund: *%5*\n%6Warn ID: *%6*\nPunkte: *%7*"
+      "fieldHeader": "Verwarnung %0",
+      "field": "%0\nName: *%1*\nID: *%2%3*\nGrund: *%4*\n%5Warn ID: *%6*\nPunkte: *%7*"
     },
     "modifywarn": {
       "noargs": "Bitte gebe den Befehl richtig ein.",

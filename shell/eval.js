@@ -3,7 +3,6 @@ const fs = require("fs")
 const shell = require("../eventhandler/shell.js")
 const util = require("util")
 const discord = require("discord.js")
-const fs = require("fs")
 
 module.exports = {
     help: "Exekutiere Code",
@@ -18,7 +17,7 @@ module.exports = {
                 else
                     return text;
             }
-            // message.channel.send(shell.shellResponse("Eval gestartet."))
+            
             const start = process.hrtime()
             let evaled
             try {

@@ -9,6 +9,10 @@ module.exports = {
                     console.log('Client connected!')
                     console.log(`Authed for user ${client.user.username}`);
             });
+            client.on('shardResume', () => {
+                client.user.setActivity("auf DayLight Gaming", {type: "PLAYING"})
+                f.log('Client reconnected.')
+            })
             client.on('shardDisconnect', () => {
                 f.log('Client disconnected.')
             });

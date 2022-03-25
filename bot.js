@@ -66,28 +66,51 @@ global.tick = setInterval(function() {
     }
 }, 2000)
 
-/*/
+const oldConsole = console.log
+
 // Redefining the console
 console.log = function (d) {
-    let newString = d.split('') // Put the array into a string with the sepperator being that weird char
-    if (newString.length != 1) { // If the array is one long dont do anything cause then it will have no formatting
-        // Loop through everything and remove the first 4 chars so the formatting is removed
-        for (let index = 0; index < newString.length; index++) {
-            newString[index] = newString[index].substring(4)
-        }
-    }
-    // Put the new array into a string
-    newString = newString.join('')
+    let newString = ""
+    switch (typeof d) {
+        case "string":
+            newString = d.split('') // Put the array into a string with the sepperator being that weird char
+            if (newString.length != 1) { // If the array is one long dont do anything cause then it will have no formatting
+                // Loop through everything and remove the first 4 chars so the formatting is removed
+                for (let index = 0; index < newString.length; index++) {
+                    newString[index] = newString[index].substring(4)
+                }
+            }
+            // Put the new array into a string
+            newString = newString.join('')
 
+            if (nocolour) d = newString;
+            break;
+        case "boolean":
+            newString = ""
+            if (d) { newString = "True"} else {newString = "False"}
+            break;
+        case "number":
+        case "function":
+        case "bigint":
+        case "symbol":
+            newString = d.toString()
+            break;
+        case "object":
+            newString = JSON.stringify(d)
+            break;
+        case "undefined":
+            newString = "Undefined"
+            break;
+    }
     if (logconsole) { // If the console should be logged
         f.log(newString, 3, { // Log the console message
             writeLog: true
         }, "CONSOLE >");
     }
-    if (nocolour) d = newString;
-    if (!noconsole) process.stdout.write(d + '\n'); // If the console is enabled write to the console.
+    if (!noconsole) {
+        oldConsole(d)
+    }
 };
-/*/
 
 let createDB = false
 let convert = false
@@ -118,7 +141,7 @@ for (let index = 0; index < args.length; index++) {
             })
             break;
         case "convert":
-            if (createDB) return
+            if (createDB) break;
             convert = true
             returnBoot = true
             clearErrorLog("Convert.").then(() => {
@@ -207,12 +230,14 @@ global.client = new discord.Client({
     partials: ["CHANNEL"]
 }); // discord client
 
-console.log("Deleting error files...")
-const files = fs.readdirSync('./files/log')
-for (let index = 0; index < files.length; index++) {
-    if (files[index] != "latest.log") {
-        fs.unlinkSync(`./files/log/${files[index]}`)
-        f.log(`Deleted file: ${files[index]}`)
+if (errdelete) {
+    console.log("Deleting error files...")
+    const files = fs.readdirSync('./files/log')
+    for (let index = 0; index < files.length; index++) {
+        if (files[index] != "latest.log") {
+            fs.unlinkSync(`./files/log/${files[index]}`)
+            f.log(`Deleted file: ${files[index]}`)
+        }
     }
 }
 
