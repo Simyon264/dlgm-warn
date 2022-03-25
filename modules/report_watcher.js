@@ -30,7 +30,7 @@ module.exports = {
                 warnConent = {
                     "id": id,
                     "warnid": parseInt(fs.readFileSync("./files/warns/id.txt", "utf-8")) + 1,
-                    "name": msg.embeds[0].fields[5].value.trim(),
+                    "name": msg.embeds[0].fields[8].value.trim(),
                     "grund": "REPORT-NAMEUPDATE",
                     "extra": "HIDDEN",
                     "punkte": 0,
