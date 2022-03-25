@@ -76,7 +76,7 @@ module.exports = {
 
                             let newName = f.replaceAllCaseInsensitve(name, `**${name}**`,finds[i].name)
 
-                            embed.addField(f.localization("slashcommands", "searchbyname", "field",[time(date,"R"),expired.trim(),newName.trim(),finds[i].id.toString().trim(),type,finds[i].grund.trim(),extra,finds[i].warnid,finds[i].punkte]))
+                            embed.addField(f.localization("slashcommands", "searchbyname", "fieldHeader", [time(date, "R")]), f.localization("slashcommands","searchbyname","field",[expired.trim(),newName.trim(),finds[i].id.toString().trim(),type,finds[i].grund.trim(),extra,finds[i].warnid,finds[i].punkte]))
                             itemsCount++
                         }
                     } else {
