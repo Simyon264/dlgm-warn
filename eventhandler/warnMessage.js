@@ -77,7 +77,7 @@ module.exports = {
                 
                 for (let index = 0; index < lastWarn.length; index++) {
                     if (lastWarn[index].extra) {
-                        if (lastWarn.extra.includes("HIDDEN")) {
+                        if (lastWarn[index].extra.includes("HIDDEN")) {
                             lastWarn.splice(index,1)
                         }
                     }
