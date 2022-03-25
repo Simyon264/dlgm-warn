@@ -195,7 +195,7 @@ exports.error = function(err, customFileName, sendConsoleLog) {
         log_filename = log_filename.replace(/\:/g, '.') // Replaces : with . so its a valid format
 
         fs.writeFileSync(`./files/log/${log_filename}.txt`, error) // Write the file
-        if (sendConsoleLog) console.log(colors.red(`An error occured! The error can be found in ./files/log/${log_filename}.txt`)) // Console log that a error occured
+        if (sendConsoleLog) f.log(`An error occured! The error can be found in ./files/log/${log_filename}.txt`) // log that a error occured
         f.log(err, 3)
     } catch (error) {
         console.log('The error handler had a error.\n\n', error)
