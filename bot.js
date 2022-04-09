@@ -348,10 +348,6 @@ process.on('uncaughtException', (err) => {
     f.log(`\nuncaughtException!\n${err}\n\n${err.stack}`)
 })
 
-//process.on('message', (msg) => {
-//    f.log(msg)
-//})
-
 function exit(code) {
     process.stdin.resume(); //so the program will not close instantly
     console.log('Destroying client...')
