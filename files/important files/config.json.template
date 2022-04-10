@@ -13,7 +13,8 @@
     ],
     "optionalWarn": [
       "extra"
-    ]
+    ],
+		"logChannelId": ""
   },
   "special": {
     "owners": [
