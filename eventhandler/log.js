@@ -8,7 +8,7 @@ module.exports = {
         try {
             async function sendLogMessage(embed) {
                 const channel = await client.channels.fetch(f.config().bot.logChannelId)
-                channel.send({content: "** **", embeds:[embed]})
+                if (channel) channel.send({content: "** **", embeds:[embed]})
             }
             
             client.on("guildMemberUpdate", async (oldMember, newMember) => {
@@ -17,9 +17,10 @@ module.exports = {
                     const embed = new Discord.MessageEmbed()
                         .setAuthor(user.tag, user.avatarURL({ dynamic: true }))
                         .setDescription(`**Nickname geändert**`)
-                        .addField("Alter Nickname", oldMember.nick || "*nichts*")
+                        .addField("Alter Nickname", oldMember.nickname || "*nichts*")
                         .addField("Neuer Nickname", newMember.nickname || "*nichts*")
                         .setFooter(`User ID: ${user.id}`)
+                        .setColor(f.config().messageColours.member)
                     sendLogMessage(embed)
                 }
                 if (oldMember.communicationDisabledUntilTimestamp !== newMember.communicationDisabledUntilTimestamp) {
@@ -29,11 +30,13 @@ module.exports = {
                             .setDescription(`**<@${user.id}> (${user.tag}) wurde getimeouted**`)
                             .addField(`Getimeouted bis`, time(newMember.communicationDisabledUntilTimestamp))
                             .setFooter(`User ID: ${user.id}`)
+                            .setColor(f.config().messageColours.member)
                         sendLogMessage(embed)
                     } else {
                         const embed = new Discord.MessageEmbed()
                             .setAuthor(user.tag, user.avatarURL({ dynamic: true }))
                             .setDescription(`**Timeout für <@${user.id}> (${user.tag}) wurde entfernt**`)
+                            .setColor(f.config().messageColours.member)
                             .setFooter(`User ID: ${user.id}`)
                         sendLogMessage(embed)
                     }
@@ -199,6 +202,7 @@ module.exports = {
 
             client.on("messageUpdate", (oldMessage, newMessage) => {
                 if (oldMessage.content == newMessage.content) return;
+                if (f.config().special.logBlacklist.includes(newMessage.channel.id)) return;
                 const embed = new Discord.MessageEmbed()
                     .setAuthor(newMessage.author.tag, newMessage.author.avatarURL({ dynamic: true }))
                     .setDescription(`**Nachricht in <#${oldMessage.channel.id}> wurde bearbeitet. [Springe zur Nachricht](${newMessage.url})**`)
@@ -211,6 +215,7 @@ module.exports = {
 
             client.on("messageDelete", async (message) => {
                 if (message.author.bot) return;
+                if (f.config().special.logBlacklist.includes(message.channel.id)) return;
 
                 await f.sleep(2000)
 

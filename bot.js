@@ -27,6 +27,7 @@ global.noconsole = false;
 global.showfilestart = false;
 global.nocolour = false;
 global.logQueue = []
+global.queue = new Map();
 
 global.clearErrorLog = async function(why) {
     if (typeof why == "undefined") return

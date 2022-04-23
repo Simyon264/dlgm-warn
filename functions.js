@@ -3,11 +3,261 @@ const discord = require('discord.js')
 const f = require('./functions.js')
 const colors = require('colours')
 const path = require("path");
+const voice = require('@discordjs/voice');
+const ytpl = require('ytpl');
+const ytsr = require('ytsr');
+const ytdl = require('ytdl-core')
 
 exports.replaceAllCaseInsensitve = function(strReplace, strWith, string) {
     let esc = strReplace.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     let reg = new RegExp(esc, 'ig');
     return string.replace(reg, strWith);
+}
+
+function formatMilliseconds(milliseconds, padStart) {
+    function pad(num) {
+        return `${num}`.padStart(2, '0');
+    }
+    let asSeconds = milliseconds / 1000;
+
+    let hours = undefined;
+    let minutes = Math.floor(asSeconds / 60);
+    let seconds = Math.floor(asSeconds % 60);
+
+    if (minutes > 59) {
+        hours = Math.floor(minutes / 60);
+        minutes %= 60;
+    }
+
+    return hours ?
+        `${padStart ? pad(hours) : hours}:${pad(minutes)}:${pad(seconds)}` :
+        `${padStart ? pad(minutes) : minutes}:${pad(seconds)}`;
+}
+
+/**
+ * 
+ * @param {discord.VoiceChannel} voiceChannel 
+ * @param {discord.TextChannel} textChannel 
+ * @returns {boolean}
+ * Return :: True: Connection was sucsefull - False: There was an error.
+ */
+exports.connect = function(voiceChannel, textChannel, ) {
+    try {
+        if (!voiceChannel) return false;
+        if (!textChannel) return false;
+        if (queue.get(textChannel.guild.id)) return false;
+        const queueContruct = {
+            textChannel: textChannel,
+            voiceChannel: voiceChannel,
+            player: null,
+            source: null,
+            loop: "none",
+            volume: 50,
+            songs: [],
+            skips: 0,
+            skipID: [],
+            playing: false,
+            paused: false,
+        };
+
+        const connection = voice.joinVoiceChannel({
+            channelId: voiceChannel.id,
+            guildId: textChannel.guild.id,
+            adapterCreator: textChannel.guild.voiceAdapterCreator,
+        })
+        queue.set(textChannel.guild.id, queueContruct)
+        f.handleConnection(voiceChannel.guild)
+        return true;
+    } catch (error) {
+        f.error(error)
+        return false;
+    }
+}
+/**
+ *
+ * @param {discord.Guild} guild
+ */
+exports.handleConnection = function(guild) {
+    if (!guild) return;
+    const connection = voice.getVoiceConnection(guild.id)
+    connection.on(voice.VoiceConnectionStatus.Disconnected, async (oldState, newState) => {
+        try {
+            await Promise.race([
+                entersState(connection, voice.VoiceConnectionStatus.Signalling, 5_000),
+                entersState(connection, voice.VoiceConnectionStatus.Connecting, 5_000),
+            ]);
+            // Seems to be reconnecting to a new channel - ignore disconnect
+        } catch (error) {
+            // Seems to be a real disconnect which SHOULDN'T be recovered from
+            connection.destroy();
+            const serverQueue = queue.get(guild.id)
+            serverQueue.textChannel.send("Verbindung wurde getrennt.")
+            queue.delete(guild.id);
+        }
+    });
+}
+/**
+ * 
+ * @param {discord.Guild} guild 
+ * @param {string} query 
+ * @param {discord.Message} message 
+ */
+exports.addSong = async function(guild, query, message) {
+    let serverQueue = queue.get(guild.id)
+    const botMsg = message.reply("Suche... :mag:")
+    let song = {}
+    try {
+        const songInfo = await ytdl.getInfo(query)
+        song = {
+            title: songInfo.videoDetails.title,
+            url: songInfo.videoDetails.video_url,
+            raw: songInfo,
+            by: message.author,
+        };
+    } catch (error) {
+        try {
+            const filters1 = await ytsr.getFilters(query)
+            const filter1 = filters1.get('Type').get('Video');
+            const searchResults = await ytsr(filter1.url, {
+                limit: 1,
+            });
+            const songInfo = await ytdl.getInfo(searchResults.items[0].url);
+            song = {
+                title: songInfo.videoDetails.title,
+                url: songInfo.videoDetails.video_url,
+                raw: songInfo,
+                by: message.author,
+            };
+        } catch (error) {
+            f.error(error)
+            botMsg.edit("Lied konnte nicht hinzugefügt werden.")
+        }
+    }
+    const embed = new discord.MessageEmbed()
+        .setTitle("Zur Songliste hinzugefügt:")
+        .setURL(song.url)
+        .setColor(0x00AE86)
+        .setDescription(`**${song.title}**`)
+        .addField('Länge', `\`${formatMilliseconds(song.raw.videoDetails.lengthSeconds * 1000)}\``, true)
+        .addField('Kanal', `[${song.raw.videoDetails.author.name}](${song.raw.videoDetails.author.channel_url})`, true)
+        .setFooter(`Hinzugefügt von: ${song.by.username}`, song.by.avatarURL(true))
+        .setThumbnail(song.raw.videoDetails.thumbnails[song.raw.videoDetails.thumbnails.length - 1].url)
+    serverQueue.songs.push(song)
+    if (!serverQueue.playing) {
+        embed.setTitle("Spielt gerade:")
+        serverQueue.playing = true
+        f.play(guild)
+    }
+    queue.set(guild.id, serverQueue);
+    (await botMsg).edit({
+        content: '** **',
+        embeds: [embed]
+    })
+}
+
+exports.play = function(guild) {
+    let serverQueue = queue.get(guild.id)
+    let player = null;
+    let connection = voice.getVoiceConnection(guild.id)
+    let songInfo = serverQueue.songs[0];
+    let justSet = false
+    if (serverQueue.player) {
+        player = serverQueue.player
+    } else {
+        justSet = true;
+        player = voice.createAudioPlayer({
+            behaviors: {
+                noSubscriber: voice.NoSubscriberBehavior.Play,
+            }
+        });
+        serverQueue.player = player
+        queue.set(guild.id, serverQueue)
+    }
+
+    let stream = ytdl(songInfo.url, {
+        filter: 'audioonly',
+        quality: 'highestaudio',
+        dlChunkSize: 0,
+        highWaterMark: 1 << 25,
+    })
+
+    let source = voice.createAudioResource(stream, {
+        inputType: voice.StreamType.WebmOpus,
+        inlineVolume: true,
+    })
+    source.volume.setVolume(serverQueue.volume / 100)
+    player.play(source)
+    serverQueue.source = source
+    connection.subscribe(player)
+    queue.set(guild.id, serverQueue)
+    if (player && justSet == false) return;
+    player.on('stateChange', (oldState, newState) => {
+        if (newState.status == 'idle') {
+            serverQueue = queue.get(guild.id);
+            if (!serverQueue.source.ended) return f.log("Idle, stream still playing");
+            if (serverQueue.songs.length != 1 || serverQueue.loop != "none") {
+                if (serverQueue.loop == "queue") {
+                    serverQueue.songs.push(serverQueue.songs[0])
+                    serverQueue.songs.splice(0, 1)
+                }
+                if (serverQueue.loop == "none") serverQueue.songs.splice(0, 1)
+                const url = serverQueue.songs[0].url
+                let stream = ytdl(url, {
+                    filter: 'audioonly',
+                    quality: 'highestaudio',
+                    highWaterMark: 1 << 25,
+                })
+                let source = voice.createAudioResource(stream, {
+                    inputType: voice.StreamType.WebmOpus,
+                    inlineVolume: true
+                })
+                source.volume.setVolume(serverQueue.volume / 100)
+                songInfo = serverQueue.songs[0]
+                serverQueue.player.play(source)
+                // Generating the embed
+                const embed = new discord.MessageEmbed()
+                    .setTitle("Spielt gerade:")
+                    .setURL(songInfo.url)
+                    .setColor(0x00AE86)
+                    .setDescription(`**${songInfo.title}**`)
+                    .addField('Kanal', `[${songInfo.raw.videoDetails.author.name}](${songInfo.raw.videoDetails.author.channel_url})`, true)
+                    .addField('Länge', `\`${formatMilliseconds(songInfo.raw.videoDetails.lengthSeconds * 1000)}\``, true)
+                    .setFooter(`Hinzugefügt von: ${songInfo.by.username}`, songInfo.by.avatarURL(true))
+                    .setThumbnail(songInfo.raw.videoDetails.thumbnails[songInfo.raw.videoDetails.thumbnails.length - 1].url)
+                serverQueue.textChannel.send({
+                    embeds: [embed]
+                })
+                serverQueue.skips = 0
+                serverQueue.skipID = []
+                queue.set(guild.id, serverQueue)
+            } else {
+                serverQueue.textChannel.send("Die Songliste ist fertig.")
+                serverQueue.playing = false;
+                queue.set(serverQueue.textChannel.guild.id, serverQueue)
+            }
+        }
+    })
+}
+
+/**
+ * 
+ * @param {discord.Guild} guild 
+ * @returns {boolean} 
+ * Return :: True: Disconnect was sucesful False: There was an error
+ */
+
+exports.stop = function(guild) {
+    try {
+        if (!guild) return false;
+        const serverQueue = queue.get(guild.id)
+        if (!serverQueue) return false;
+        voice.getVoiceConnection(guild.id).destroy()
+        queue.delete(guild.id)
+        return true;
+    } catch (error) {
+        f.error(error)
+        return false;
+    }
 }
 
 exports.getWarns = function(id) {

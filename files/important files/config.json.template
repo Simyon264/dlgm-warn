@@ -34,12 +34,14 @@
     "disable": [
 
     ],
-    "categories": [
-      "general",
-      "moderation",
-      "warns",
-      "server"
-    ]
+		"categories": [
+			"general",
+			"moderation",
+			"warns",
+			"fun",
+			"server",
+			"music"
+		]
   },
   "modules": {}
 }
