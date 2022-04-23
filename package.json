@@ -1,6 +1,6 @@
 {
   "name": "dlgmwarn",
-  "version": "2.7.9",
+  "version": "3.7.9",
   "description": "",
   "main": "bot.js",
   "scripts": {
@@ -11,8 +11,17 @@
   "license": "GPL-3.0",
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
+    "@discordjs/opus": "^0.5.3",
+    "@discordjs/voice": "^0.9.0",
     "colours": "^0.6.0-2",
-    "discord.js": "^13.0.1",
-    "sqlite3": "^5.0.2"
+    "discord.js": "^13.6.0",
+    "ffmpeg-static": "^4.4.1",
+    "libsodium-wrappers": "^0.7.10",
+    "node-opus": "^0.3.3",
+    "opusscript": "^0.0.8",
+    "sqlite3": "^5.0.2",
+    "ytdl-core": "^4.11.0",
+    "ytpl": "^2.3.0",
+    "ytsr": "^3.7.0"
   }
 }

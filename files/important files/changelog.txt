@@ -1,2 +1,3 @@
-Version 2.7.9
-- Bot kann jetzt alles loggen.
+Version 3.7.9
+- Nickname log gefixt
+- Musik bot funktion hinzugefügt.
