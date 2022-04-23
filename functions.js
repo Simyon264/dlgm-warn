@@ -104,7 +104,7 @@ exports.handleConnection = function(guild) {
  */
 exports.addSong = async function(guild, query, message) {
     let serverQueue = queue.get(guild.id)
-    const botMsg = message.reply("Suche... :mag:")
+    const botMsg = await message.reply("Suche... :mag:")
     let song = {}
     try {
         const songInfo = await ytdl.getInfo(query)
@@ -251,6 +251,9 @@ exports.stop = function(guild) {
         if (!guild) return false;
         const serverQueue = queue.get(guild.id)
         if (!serverQueue) return false;
+        if (serverQueue.player) {
+            serverQueue.player.stop()
+        }
         voice.getVoiceConnection(guild.id).destroy()
         queue.delete(guild.id)
         return true;
