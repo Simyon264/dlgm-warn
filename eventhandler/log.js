@@ -168,7 +168,7 @@ module.exports = {
                 const AuditLogFetch = await guildMember.guild.fetchAuditLogs({ limit: 1, type: "MEMBER_KICK"})
                 
                 let kicked = false;
-                console.log(AuditLogFetch.entries.first())
+
                 if (AuditLogFetch.entries.first()) {
                     const Entry = AuditLogFetch.entries.first()
                     const timestamp = new Date().getTime()
