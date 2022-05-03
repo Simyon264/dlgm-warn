@@ -16,11 +16,14 @@ module.exports = {
         const channel = message.member.voice.channel
 
         if (!serverQueue) return message.reply("Ich bin nicht Verbunden.")
+        if (channel.id != queue.get(message.channel.guild.id).voiceChannel.id) return message.reply("Du musst mit dem Bot in einem Sprachkanal sein.");
+        
         const stopped = f.stop(message.guild)
         if (stopped) {
             message.reply(`Verbindung gestoppt.`)
         } else {
-            message.reply("Fehler beim Stoppen.")
+            queue = new Map()
+            message.reply("Fehler beim Stoppen. (Kann aber trotzdem Funktioniert haben)")
         }
 	}
 }

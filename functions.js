@@ -130,7 +130,7 @@ exports.addSong = async function(guild, query, message) {
             };
         } catch (error) {
             f.error(error)
-            botMsg.edit("Lied konnte nicht hinzugefügt werden.")
+            botMsg.edit("Lied konnte nicht hinzugefügt werden. Möglicherweise wurde nichts gefunden.")
         }
     }
     const embed = new discord.MessageEmbed()
@@ -182,7 +182,6 @@ exports.play = function(guild) {
     })
 
     let source = voice.createAudioResource(stream, {
-        inputType: voice.StreamType.WebmOpus,
         inlineVolume: true,
     })
     source.volume.setVolume(serverQueue.volume / 100)
@@ -194,6 +193,7 @@ exports.play = function(guild) {
     player.on('stateChange', (oldState, newState) => {
         if (newState.status == 'idle') {
             serverQueue = queue.get(guild.id);
+            if (!serverQueue.source) return;
             if (!serverQueue.source.ended) return f.log("Idle, stream still playing");
             if (serverQueue.songs.length != 1 || serverQueue.loop != "none") {
                 if (serverQueue.loop == "queue") {
@@ -208,10 +208,10 @@ exports.play = function(guild) {
                     highWaterMark: 1 << 25,
                 })
                 let source = voice.createAudioResource(stream, {
-                    inputType: voice.StreamType.WebmOpus,
                     inlineVolume: true
                 })
-                source.volume.setVolume(serverQueue.volume / 100)
+                source.volume?.setVolume(serverQueue.volume / 100)
+                serverQueue.source = source;
                 songInfo = serverQueue.songs[0]
                 serverQueue.player.play(source)
                 // Generating the embed
