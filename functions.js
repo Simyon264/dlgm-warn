@@ -104,16 +104,57 @@ exports.handleConnection = function(guild) {
  */
 exports.addSong = async function(guild, query, message) {
     let serverQueue = queue.get(guild.id)
-    const botMsg = message.reply("Suche... :mag:")
+    const botMsg = await message.reply("Suche... :mag:")
     let song = {}
     try {
-        const songInfo = await ytdl.getInfo(query)
-        song = {
-            title: songInfo.videoDetails.title,
-            url: songInfo.videoDetails.video_url,
-            raw: songInfo,
-            by: message.author,
-        };
+        try {
+            const playlistID = await ytpl.getPlaylistID(query)
+            const playlist = await ytpl(playlistID, {
+                limit: 50,
+            })
+            botMsg.edit("Playlist wird hinzugefügt, dies kann etwas länger dauern. :notes:")
+            for (let index = 0; index < playlist.items.length; index++) {
+                serverQueue = queue.get(guild.id);
+                let curSong = await ytdl.getInfo(playlist.items[index].shortUrl)
+                let curSongInfo = {
+                    title: curSong.videoDetails.title,
+                    url: curSong.videoDetails.video_url,
+                    raw: curSong,
+                    by: message.author
+                }
+                serverQueue.songs.push(curSongInfo)
+                if (index == 0) {
+                    song = curSongInfo
+                }
+                await f.sleep(50)
+            }
+            queue.set(guild.id, serverQueue)
+            if (!serverQueue.playing) {
+                f.play(guild)
+                serverQueue.playing = true
+                queue.set(guild.id, serverQueue)
+                const embed = new discord.MessageEmbed()
+                    .setTitle("Spielt gerade:")
+                    .setURL(song.url)
+                    .setColor(0x00AE86)
+                    .setDescription(`**${song.title}**`)
+                    .addField('Länge', `\`${formatMilliseconds(song.raw.videoDetails.lengthSeconds * 1000)}\``, true)
+                    .addField('Kanal', `[${song.raw.videoDetails.author.name}](${song.raw.videoDetails.author.channel_url})`, true)
+                    .setFooter(`Hinzugefügt von: ${song.by.username}`, song.by.avatarURL(true))
+                    .setThumbnail(song.raw.videoDetails.thumbnails[song.raw.videoDetails.thumbnails.length - 1].url)
+                message.channel.send({embeds: [embed]})
+            }
+            botMsg.edit(`${playlist.items.length} Lieder hinzugefügt.`)
+            return
+        } catch (error) {
+            const songInfo = await ytdl.getInfo(query)
+            song = {
+                title: songInfo.videoDetails.title,
+                url: songInfo.videoDetails.video_url,
+                raw: songInfo,
+                by: message.author,
+            };
+        }
     } catch (error) {
         try {
             const filters1 = await ytsr.getFilters(query)
@@ -130,7 +171,7 @@ exports.addSong = async function(guild, query, message) {
             };
         } catch (error) {
             f.error(error)
-            botMsg.edit("Lied konnte nicht hinzugefügt werden.")
+            botMsg.edit("Lied konnte nicht hinzugefügt werden. Möglicherweise wurde nichts gefunden.")
         }
     }
     const embed = new discord.MessageEmbed()
@@ -182,7 +223,6 @@ exports.play = function(guild) {
     })
 
     let source = voice.createAudioResource(stream, {
-        inputType: voice.StreamType.WebmOpus,
         inlineVolume: true,
     })
     source.volume.setVolume(serverQueue.volume / 100)
@@ -194,6 +234,7 @@ exports.play = function(guild) {
     player.on('stateChange', (oldState, newState) => {
         if (newState.status == 'idle') {
             serverQueue = queue.get(guild.id);
+            if (!serverQueue.source) return;
             if (!serverQueue.source.ended) return f.log("Idle, stream still playing");
             if (serverQueue.songs.length != 1 || serverQueue.loop != "none") {
                 if (serverQueue.loop == "queue") {
@@ -208,10 +249,10 @@ exports.play = function(guild) {
                     highWaterMark: 1 << 25,
                 })
                 let source = voice.createAudioResource(stream, {
-                    inputType: voice.StreamType.WebmOpus,
                     inlineVolume: true
                 })
-                source.volume.setVolume(serverQueue.volume / 100)
+                source.volume?.setVolume(serverQueue.volume / 100)
+                serverQueue.source = source;
                 songInfo = serverQueue.songs[0]
                 serverQueue.player.play(source)
                 // Generating the embed
@@ -251,6 +292,9 @@ exports.stop = function(guild) {
         if (!guild) return false;
         const serverQueue = queue.get(guild.id)
         if (!serverQueue) return false;
+        if (serverQueue.player) {
+            serverQueue.player.stop()
+        }
         voice.getVoiceConnection(guild.id).destroy()
         queue.delete(guild.id)
         return true;

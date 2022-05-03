@@ -41,7 +41,7 @@ module.exports = {
             menu.addOptions([
                 {
                     label: `Song ${index + 1}`,
-                    description: `Channel: ${searchResults.items[index].author.name}`,
+                    description: `Channel: ${searchResults.items[index].author.name || "Keine Information"}`,
                     value: `${searchResults.items[index].id}`,
                 }
             ])

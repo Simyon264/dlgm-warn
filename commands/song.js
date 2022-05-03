@@ -1,7 +1,7 @@
 const f = require('../functions.js');
 const discord = require('discord.js');
 const fs = require("fs")
-
+const fetch = require('node-fetch')
 module.exports = {
 	name: 'song',
 	description: f.localization("commands","song","exports").description,
@@ -51,7 +51,7 @@ module.exports = {
                     .setDescription(`Zeit verbleibend: **${formatMilliseconds(timeLeft)}**`)
                     .addField('Kanal', `[${songInfo.raw.videoDetails.author.name}](${songInfo.raw.videoDetails.author.channel_url})`, true)
                     .addField('Likes und dislikes', `${data.likes} :thumbsup: ${data.dislikes} :thumbsdown: `, true)
-                    .setFooter(`Requested by: ${songInfo.by.username}`, songInfo.by.avatarURL(true))
+                    .setFooter(`Hinzugefügt von: ${songInfo.by.username}`, songInfo.by.avatarURL(true))
                     .setThumbnail(songInfo.raw.videoDetails.thumbnails[songInfo.raw.videoDetails.thumbnails.length - 1].url)
                 message.reply({content: "** **", embeds:[embed]})
             });

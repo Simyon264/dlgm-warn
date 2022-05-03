@@ -1,3 +1,2 @@
-Version 3.7.9
-- Nickname log gefixt
-- Musik bot funktion hinzugefügt.
+Version 3.8.9
+- Shuffle hinzugefügt
