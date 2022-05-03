@@ -107,13 +107,54 @@ exports.addSong = async function(guild, query, message) {
     const botMsg = await message.reply("Suche... :mag:")
     let song = {}
     try {
-        const songInfo = await ytdl.getInfo(query)
-        song = {
-            title: songInfo.videoDetails.title,
-            url: songInfo.videoDetails.video_url,
-            raw: songInfo,
-            by: message.author,
-        };
+        try {
+            const playlistID = await ytpl.getPlaylistID(query)
+            const playlist = await ytpl(playlistID, {
+                limit: 50,
+            })
+            botMsg.edit("Playlist wird hinzugefügt, dies kann etwas länger dauern. :notes:")
+            for (let index = 0; index < playlist.items.length; index++) {
+                serverQueue = queue.get(guild.id);
+                let curSong = await ytdl.getInfo(playlist.items[index].shortUrl)
+                let curSongInfo = {
+                    title: curSong.videoDetails.title,
+                    url: curSong.videoDetails.video_url,
+                    raw: curSong,
+                    by: message.author
+                }
+                serverQueue.songs.push(curSongInfo)
+                if (index == 0) {
+                    song = curSongInfo
+                }
+                await f.sleep(50)
+            }
+            queue.set(guild.id, serverQueue)
+            if (!serverQueue.playing) {
+                f.play(guild)
+                serverQueue.playing = true
+                queue.set(guild.id, serverQueue)
+                const embed = new discord.MessageEmbed()
+                    .setTitle("Spielt gerade:")
+                    .setURL(song.url)
+                    .setColor(0x00AE86)
+                    .setDescription(`**${song.title}**`)
+                    .addField('Länge', `\`${formatMilliseconds(song.raw.videoDetails.lengthSeconds * 1000)}\``, true)
+                    .addField('Kanal', `[${song.raw.videoDetails.author.name}](${song.raw.videoDetails.author.channel_url})`, true)
+                    .setFooter(`Hinzugefügt von: ${song.by.username}`, song.by.avatarURL(true))
+                    .setThumbnail(song.raw.videoDetails.thumbnails[song.raw.videoDetails.thumbnails.length - 1].url)
+                message.channel.send({embeds: [embed]})
+            }
+            botMsg.edit(`${playlist.items.length} Lieder hinzugefügt.`)
+            return
+        } catch (error) {
+            const songInfo = await ytdl.getInfo(query)
+            song = {
+                title: songInfo.videoDetails.title,
+                url: songInfo.videoDetails.video_url,
+                raw: songInfo,
+                by: message.author,
+            };
+        }
     } catch (error) {
         try {
             const filters1 = await ytsr.getFilters(query)
