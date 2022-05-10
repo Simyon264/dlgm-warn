@@ -21,7 +21,7 @@ module.exports = {
         serverQueue.stopID.push(message.author.id)
         serverQueue.stops++
 
-        if (serverQueue.stops >= Math.round(serverQueue.voiceChannel.members.find(x => x.user.bot == false).length / 2)) {
+        if (serverQueue.stops >= Math.round(serverQueue.voiceChannel.members.filter(x => x.user.bot == false).size / 2)) {
             const stopped = f.stop(message.guild)
             if (stopped) {
                 message.reply(`Verbindung gestoppt.`)
@@ -30,7 +30,7 @@ module.exports = {
                 message.reply("Fehler beim Stoppen. (Kann aber trotzdem Funktioniert haben)")
             }
         } else {
-            message.reply(`Abgestimmt! (${serverQueue.stops}/${Math.round(serverQueue.voiceChannel.members.find(x => x.user.bot == false).length / 2)})`)
+            message.reply(`Abgestimmt! (${serverQueue.stops}/${Math.round(serverQueue.voiceChannel.members.filter(x => x.user.bot == false).size / 2)})`)
             queue.set(message.guild.id, serverQueue)
         }
 
