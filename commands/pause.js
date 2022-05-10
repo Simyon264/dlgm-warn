@@ -8,7 +8,7 @@ module.exports = {
 	category: 'music',
 	modcommand: false,
 	usage: f.localization("commands","pause","exports").usage,
-	perms: 'MANAGE_MESSAGES',
+	perms: '',
 	alias: [],
 	cooldown: 1,
     run: function (message, prefix, args, client) {
