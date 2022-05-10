@@ -56,6 +56,8 @@ exports.connect = function(voiceChannel, textChannel, ) {
             songs: [],
             skips: 0,
             skipID: [],
+            stops: 0,
+            stopID: [],
             playing: false,
             paused: false,
         };
@@ -274,6 +276,7 @@ exports.play = function(guild) {
             } else {
                 serverQueue.textChannel.send("Die Songliste ist fertig.")
                 serverQueue.playing = false;
+                serverQueue.songs = [];
                 queue.set(serverQueue.textChannel.guild.id, serverQueue)
             }
         }
