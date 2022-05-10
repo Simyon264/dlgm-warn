@@ -56,6 +56,8 @@ exports.connect = function(voiceChannel, textChannel, ) {
             songs: [],
             skips: 0,
             skipID: [],
+            stops: 0,
+            stopID: [],
             playing: false,
             paused: false,
         };
@@ -110,7 +112,7 @@ exports.addSong = async function(guild, query, message) {
         try {
             const playlistID = await ytpl.getPlaylistID(query)
             const playlist = await ytpl(playlistID, {
-                limit: 50,
+                limit: 300,
             })
             botMsg.edit("Playlist wird hinzugefügt, dies kann etwas länger dauern. :notes:")
             for (let index = 0; index < playlist.items.length; index++) {
@@ -274,6 +276,7 @@ exports.play = function(guild) {
             } else {
                 serverQueue.textChannel.send("Die Songliste ist fertig.")
                 serverQueue.playing = false;
+                serverQueue.songs = [];
                 queue.set(serverQueue.textChannel.guild.id, serverQueue)
             }
         }

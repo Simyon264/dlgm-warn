@@ -23,11 +23,11 @@ module.exports = {
         serverQueue.skipID.push(message.author.id)
         serverQueue.skips++
     
-        if (serverQueue.skips >= Math.round(serverQueue.voiceChannel.members.size / 2)) {
+        if (serverQueue.skips >= Math.round(serverQueue.voiceChannel.members.filter(x => x.user.bot == false).size / 2)) {
             serverQueue.player.stop();
             message.reply('Geskippt! :thumbsup:')
         } else {
-            message.reply(`Abgestimmt! (${serverQueue.skips}/${Math.round(serverQueue.voiceChannel.members.size / 2)})`)
+            message.reply(`Abgestimmt! (${serverQueue.skips}/${Math.round(serverQueue.voiceChannel.members.filter(x => x.user.bot == false).size / 2)})`)
             queue.set(message.guild.id, serverQueue)
         }
     }
