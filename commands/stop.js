@@ -17,13 +17,22 @@ module.exports = {
 
         if (!serverQueue) return message.reply("Ich bin nicht Verbunden.")
         if (channel.id != queue.get(message.channel.guild.id).voiceChannel.id) return message.reply("Du musst mit dem Bot in einem Sprachkanal sein.");
-        
-        const stopped = f.stop(message.guild)
-        if (stopped) {
-            message.reply(`Verbindung gestoppt.`)
+        if (serverQueue.stopID.includes(message.author.id)) return message.reply("Du hast bereits abgestimmt.")
+        serverQueue.stopID.push(message.author.id)
+        serverQueue.stops++
+
+        if (serverQueue.stops >= Math.round(serverQueue.voiceChannel.members.find(x => x.user.bot == false).length / 2)) {
+            const stopped = f.stop(message.guild)
+            if (stopped) {
+                message.reply(`Verbindung gestoppt.`)
+            } else {
+                queue = new Map()
+                message.reply("Fehler beim Stoppen. (Kann aber trotzdem Funktioniert haben)")
+            }
         } else {
-            queue = new Map()
-            message.reply("Fehler beim Stoppen. (Kann aber trotzdem Funktioniert haben)")
+            message.reply(`Abgestimmt! (${serverQueue.stops}/${Math.round(serverQueue.voiceChannel.members.find(x => x.user.bot == false).length / 2)})`)
+            queue.set(message.guild.id, serverQueue)
         }
+
 	}
 }
