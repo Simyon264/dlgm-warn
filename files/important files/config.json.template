@@ -6,6 +6,7 @@
     "lang": "de",
     "warnchannelID": "<id here>",
     "warnRoleId": "<id here>",
+    "allowLinkedUsersToSeeTheirWarns": true,
     "validWarn": [
       "name",
       "grund",
