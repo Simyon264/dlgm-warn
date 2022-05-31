@@ -21,6 +21,7 @@
     "node-opus": "^0.3.3",
     "opusscript": "^0.0.8",
     "sqlite3": "^5.0.2",
+    "table": "^6.8.0",
     "ytdl-core": "^4.11.0",
     "ytpl": "^2.3.0",
     "ytsr": "^3.7.0"
