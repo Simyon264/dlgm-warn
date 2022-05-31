@@ -12,9 +12,23 @@ module.exports = {
     alias: ["gws"],
     cooldown: 1,
     run: async function (message, prefix, args) {
-        if (!(args.length >= 2)) return message.reply(f.localization("slashcommands", "getwarns", "noargs"))
-        if (message.member.roles.cache.has(f.config().bot.warnRoleId)) {
-            const steamID = args[1].split("@")[0].replace(" ", "")
+        let steamID = "";
+        let allowed = false
+        if (message.member.roles.cache.has(f.config().bot.warnRoleId)) allowed = true;
+        const link = await f.getLink(message.author.id)
+        if (link && f.config().bot.allowLinkedUsersToSeeTheirWarns) {
+            if (!args[1]) {
+                allowed = true;
+                steamID = link.idIngame
+            } else {
+                if (!(args.length >= 2)) return message.reply(f.localization("slashcommands", "getwarns", "noargs"))
+                steamID = args[1].split("@")[0].replace(" ", "")
+            }
+        } else {
+            if (!(args.length >= 2)) return message.reply(f.localization("slashcommands", "getwarns", "noargs"))
+            steamID = args[1].split("@")[0].replace(" ", "")
+        }
+        if (allowed) {
             let sortby = "date"
             if (args[2]) {
                 let validArr = ["newest","oldest","onlyvalid","badonly"]
