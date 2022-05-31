@@ -2,16 +2,29 @@ const f = require('../functions.js');
 const discord = require('discord.js');
 const fs = require("fs")
 const mathjs = require('mathjs')
+const {
+    fork
+} = require('child_process');
+
+process.on('message', (args) => {
+    try {
+        let reply = `\`${args} = ${mathjs.evaluate(args)}\``
+
+        process.send(reply)
+    } catch (error) {
+        process.send(`\`${error.message}\``)
+    }
+});
 
 module.exports = {
-	name: 'calc',
-	description: f.localization("commands","calc","exports").description,
-	category: 'general',
-	modcommand: false,
-	usage: f.localization("commands","calc","exports").usage,
-	perms: '',
-	alias: [],
-	cooldown: 5,
+    name: 'calc',
+    description: f.localization("commands", "calc", "exports").description,
+    category: 'general',
+    modcommand: false,
+    usage: f.localization("commands", "calc", "exports").usage,
+    perms: '',
+    alias: [],
+    cooldown: 5,
     run: async function (message, prefix, args, client) {
         if (args.length == 1) {
             let currentCalc = calcMap.get(message.author.id)
@@ -104,7 +117,7 @@ module.exports = {
                 .setLabel("+")
                 .setStyle("PRIMARY")
                 .setCustomId("calc_add")
-        
+
             let buttonRow_1 = new discord.MessageActionRow()
                 .addComponents(button1_1)
                 .addComponents(button1_2)
@@ -134,7 +147,7 @@ module.exports = {
                 .addComponents(button5_2)
                 .addComponents(button5_3)
                 .addComponents(button5_4)
-        
+
             let sentMessage
 
             if (currentCalc) {
@@ -229,7 +242,27 @@ module.exports = {
             args.splice(0, 1)
             args = args.join(" ")
             try {
-                message.reply(`\`${args} = ${mathjs.evaluate(args)}\``)
+                const compute = fork('./commands/calc.js');
+
+                compute.send(args)
+                compute.on('message', reply => {
+                    compute.kill()
+                    if (reply.length > 2000) {
+                        fs.writeFileSync("./files/cache/mathreturn.txt", reply.replace("`", ""));
+                        try {
+                            message.reply({
+                                files: [{
+                                    attachment: './files/cache/mathreturn.txt',
+                                    name: 'mathreturn.xl'
+                                }]
+                            })
+                            return;
+                        } catch (error) {
+                            return message.reply("Antwort war zu lang.")
+                        }
+                    }
+                    message.reply(reply)
+                });
             } catch (error) {
                 message.reply(`\`${error.message}\``)
             }
