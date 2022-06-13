@@ -17,7 +17,7 @@ module.exports = {
             if (msg.channel.id !== config.channel) return;
             if (msg.author.id == client.user.id) return;
             if (msg.embeds.length == 0) return; // No embed
-            const id = msg.embeds[0].fields[9].value.split('@')[0].replace("`","")
+            const id = msg.embeds[0].fields[9].value.split('@')[0].replace("`", "")
 
             let warns = await f.getWarns(id);
             if (warns.length == 0) return;
@@ -25,7 +25,7 @@ module.exports = {
 
             let name = warns[0].name
             const timestamp = new Date().getTime() - (30 * 24 * 60 * 60 * 1000)
-            
+
             if (warns[0].name !== msg.embeds[0].fields[8].value.trim()) {
                 warnConent = {
                     "id": id,
@@ -68,11 +68,24 @@ module.exports = {
             for (let index = 0; index < warns.length; index++) {
                 if (warns[index].extra) {
                     if (warns[index].extra.includes("HIDDEN")) {
-                        warns.splice(index,1)
+                        delete warns[index]
+                        //warns.splice(index, 1)
                     }
                 }
             }
-            
+
+            // Count warns with zero points
+
+            // zeroPoint = 0
+
+            // for (let index = 0; index < warns.length; index++) {
+            //     console.log(warns[index])
+            //     console.log(warns)
+            //     if (parseFloat(warns[index]["punkte"].toString().replace(",", ".")) == 0) {
+            //         zeroPoint++
+            //     }
+            // }
+
             let showing = 0
 
             if (warns.length > 5) {
@@ -81,6 +94,7 @@ module.exports = {
 
             const embed = new discord.MessageEmbed()
                 .setTitle(`Verwarnungen für \`${name}\``)
+                //.addField("Mündliche Verwarnungen:", `${zeroPoint}`)
                 .addField(f.localization("slashcommands", "getwarns", "pointsN"), `${totalPoints}`, true)
                 .addField(f.localization("slashcommands", "getwarns", "pointsT"), `${points}`, true)
                 .setFooter(`${showing} von ${warns.length} Verwarnungen`)
@@ -93,17 +107,17 @@ module.exports = {
                     let expiredMsg = ""
                     let extraMsg = ""
                     let type = ""
-                                
+
                     if (warns[i].type == "steam") type = "@steam"
                     if (warns[i].type == "discord") type = "@discord"
-                                
+
                     if (warns[i].extra) extraMsg = f.localization("slashcommands", "getwarns", "extra", [warns[i].extra.toString().trim()])
                     if (warns[i].expired) expiredMsg = f.localization("slashcommands", "getwarns", "expired")
-                    
+
                     embed.addField(f.localization("slashcommands", "getwarns", "fieldTitle", [time(date, "R")]), f.localization("slashcommands", "getwarns", "fieldBody", [expiredMsg, warns[i]["grund"], warns[i]["punkte"].toString().replaceAll(",", "."), warns[i].by, warns[i].byName, warns[i].id, extraMsg, type]))
                 }
             }
-            msg.channel.send({content:"** **", embeds:[embed]})
+            msg.channel.send({ content: "** **", embeds: [embed] })
         })
     }
 }

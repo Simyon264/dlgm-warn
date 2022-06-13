@@ -10,3 +10,4 @@ package-lock.json
 /files/warns/*.*
 /files/important files/config.json
 /files/important files/discord.db
+/slashcommands/ranganfrage.js

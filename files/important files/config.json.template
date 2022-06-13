@@ -4,6 +4,7 @@
     "description": "DLGM-Warn-Bot",
     "slashcommandServerId": "<id here>",
     "lang": "de",
+    "feedbackChannelId": "<id here>",
     "warnchannelID": "<id here>",
     "warnRoleId": "<id here>",
     "allowLinkedUsersToSeeTheirWarns": true,

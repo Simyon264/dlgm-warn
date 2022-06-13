@@ -238,53 +238,58 @@ exports.play = function (guild) {
     queue.set(guild.id, serverQueue)
     if (player && justSet == false) return;
     player.on('stateChange', (oldState, newState) => {
-        if (newState.status == 'idle') {
-            serverQueue = queue.get(guild.id);
-            if (!serverQueue.source) return;
-            if (!serverQueue.source.ended) return f.log("Idle, stream still playing");
-            if (serverQueue.songs.length != 1 || serverQueue.loop != "none") {
-                if (serverQueue.loop == "queue") {
-                    serverQueue.songs.push(serverQueue.songs[0])
-                    serverQueue.songs.splice(0, 1)
+        serverQueue = queue.get(guild.id);
+        try {
+            if (newState.status == 'idle') {
+                if (!serverQueue.source) return;
+                if (!serverQueue.source.ended) return f.log("Idle, stream still playing");
+                if (serverQueue.songs.length != 1 || serverQueue.loop != "none") {
+                    if (serverQueue.loop == "queue") {
+                        serverQueue.songs.push(serverQueue.songs[0])
+                        serverQueue.songs.splice(0, 1)
+                    }
+                    if (serverQueue.loop == "none") serverQueue.songs.splice(0, 1)
+                    const url = serverQueue.songs[0].url
+                    let stream = ytdl(url, {
+                        filter: 'audioonly',
+                        quality: 'highestaudio',
+                        highWaterMark: 1 << 25,
+                    })
+                    let source = voice.createAudioResource(stream, {
+                        inlineVolume: true
+                    })
+                    source.volume?.setVolume(serverQueue.volume / 100)
+                    serverQueue.source = source;
+                    songInfo = serverQueue.songs[0]
+                    serverQueue.player.play(source)
+                    // Generating the embed
+                    const embed = new discord.MessageEmbed()
+                        .setTitle("Spielt gerade:")
+                        .setURL(songInfo.url)
+                        .setColor(0x00AE86)
+                        .setDescription(`**${songInfo.title}**`)
+                        .addField('Kanal', `[${songInfo.raw.videoDetails.author.name}](${songInfo.raw.videoDetails.author.channel_url})`, true)
+                        .addField('Länge', `\`${formatMilliseconds(songInfo.raw.videoDetails.lengthSeconds * 1000)}\``, true)
+                        .setFooter(`Hinzugefügt von: ${songInfo.by.username}`, songInfo.by.avatarURL(true))
+                        .setThumbnail(songInfo.raw.videoDetails.thumbnails[songInfo.raw.videoDetails.thumbnails.length - 1].url)
+                    serverQueue.textChannel.send({
+                        embeds: [embed]
+                    })
+                    serverQueue.skips = 0
+                    serverQueue.skipID = []
+                    serverQueue.stops = 0
+                    serverQueue.stopID = []
+                    queue.set(guild.id, serverQueue)
+                } else {
+                    serverQueue.textChannel.send("Die Songliste ist fertig.")
+                    serverQueue.playing = false;
+                    serverQueue.songs = [];
+                    queue.set(serverQueue.textChannel.guild.id, serverQueue)
                 }
-                if (serverQueue.loop == "none") serverQueue.songs.splice(0, 1)
-                const url = serverQueue.songs[0].url
-                let stream = ytdl(url, {
-                    filter: 'audioonly',
-                    quality: 'highestaudio',
-                    highWaterMark: 1 << 25,
-                })
-                let source = voice.createAudioResource(stream, {
-                    inlineVolume: true
-                })
-                source.volume?.setVolume(serverQueue.volume / 100)
-                serverQueue.source = source;
-                songInfo = serverQueue.songs[0]
-                serverQueue.player.play(source)
-                // Generating the embed
-                const embed = new discord.MessageEmbed()
-                    .setTitle("Spielt gerade:")
-                    .setURL(songInfo.url)
-                    .setColor(0x00AE86)
-                    .setDescription(`**${songInfo.title}**`)
-                    .addField('Kanal', `[${songInfo.raw.videoDetails.author.name}](${songInfo.raw.videoDetails.author.channel_url})`, true)
-                    .addField('Länge', `\`${formatMilliseconds(songInfo.raw.videoDetails.lengthSeconds * 1000)}\``, true)
-                    .setFooter(`Hinzugefügt von: ${songInfo.by.username}`, songInfo.by.avatarURL(true))
-                    .setThumbnail(songInfo.raw.videoDetails.thumbnails[songInfo.raw.videoDetails.thumbnails.length - 1].url)
-                serverQueue.textChannel.send({
-                    embeds: [embed]
-                })
-                serverQueue.skips = 0
-                serverQueue.skipID = []
-                serverQueue.stops = 0
-                serverQueue.stopID = []
-                queue.set(guild.id, serverQueue)
-            } else {
-                serverQueue.textChannel.send("Die Songliste ist fertig.")
-                serverQueue.playing = false;
-                serverQueue.songs = [];
-                queue.set(serverQueue.textChannel.guild.id, serverQueue)
             }
+        } catch (error) {
+            serverQueue.textChannel.send({ content: "Ein Fehler ist aufgetreten. Ich habe den Kanal verlassen und die Songliste gestoppt." })
+            f.stop(guild)
         }
     })
 }

@@ -151,5 +151,71 @@
         "required": true
       }
     ]
+  },
+  {
+    "name": "ranganfrage",
+    "description": "Erstelle eine Ranganfrage.",
+    "options": [
+      {
+        "name": "rang",
+        "type": "STRING",
+        "description": "Der Name von dem Rang.",
+        "required": true,
+        "choices": [
+          {
+            "name": "Tagesspieler",
+            "value": "Tagesspieler"
+          },
+          {
+            "name": "Legende",
+            "value": "Legende"
+          },
+          {
+            "name": "Eternal",
+            "value": "Eternal"
+          },
+          {
+            "name": "Eclipse",
+            "value": "Eclipse"
+          },
+          {
+            "name": "Rainbow",
+            "value": "Rainbow"
+          },
+          {
+            "name": "Event Gewinner",
+            "value": "Event Gewinner"
+          },
+          {
+            "name": "Server Booster",
+            "value": "Server Booster"
+          },
+          {
+            "name": "DayLight Elite",
+            "value": "DayLight Elite"
+          },
+          {
+            "name": "No Life",
+            "value": "No Life"
+          },
+          {
+            "name": "Unterstützer des Servers",
+            "value": "Unterstützer des Servers"
+          }
+        ]
+      },
+      {
+        "name": "steamname",
+        "type": "STRING",
+        "description": "Nenne bitte deinen Steamnamen.",
+        "required": true
+      },
+      {
+        "name": "id",
+        "type": "STRING",
+        "description": "Deine Steamid64, diese wird zum nutzen, diese dient zur Erkennung des Steamprofils.",
+        "required": true
+      }
+    ]
   }
 ]
