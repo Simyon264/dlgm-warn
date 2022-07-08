@@ -338,6 +338,7 @@ exports.getStats = async function (id) {
         discordDB.serialize(() => {
             discordDB.all(`SELECT "_rowid_",* FROM "main"."stats" WHERE "id" LIKE '%${id}%' ESCAPE '\\'`, (err, row) => {
                 if (err) {
+                    console.error(err)
                     resolve([])
                 } else {
                     if (row[0]) {
@@ -347,6 +348,31 @@ exports.getStats = async function (id) {
                     }
                 }
             })
+        })
+    })
+}
+
+exports.updateStat = async function (id, stat, value, selfcall) {
+    return new Promise(async (resolve) => {
+        discordDB.run(`UPDATE stats SET ${stat} = ? WHERE "id" = ${id}`, value, async function (err) {
+            if (err) {
+                f.log(`SQL ERROR: ${err.message}\nCOMMAND: UPDATE stats SET ${stat} = ${value} WHERE "id" = ${id}`)
+                resolve(false);
+            }
+            if (this.changes == 0) {
+                const stats = await f.getStats(id);
+                if (stats.length == 0) {
+                    discordDB.exec(`INSERT INTO stats ("id") VALUES('${id}')`, (err) => {
+                        if (err) {
+                            f.log(`SQL ERROR: ${err.message}`)
+                        }
+                    })
+                    if (!selfcall) f.updateStat(id, stat, value, true)
+                }
+                resolve(true);
+            } else {
+                resolve(true);
+            }
         })
     })
 }
@@ -361,7 +387,7 @@ exports.addAchievement = async function (id, acId) {
             }
         }
         if (achievements.length == 0) {
-            discordDB.exec(`INSERT INTO "main"."ac"("id","data") VALUES ('${id}','[${acId}]');`, (err) => {
+            discordDB.exec(`INSERT INTO "main"."ac"("id", "data") VALUES('${id}', '[${acId}]'); `, (err) => {
                 if (err) {
                     console.log(err.message)
                     resolve(false)
@@ -371,7 +397,7 @@ exports.addAchievement = async function (id, acId) {
         } else {
             let data = JSON.parse(achievements[0].data)
             data.push(acId)
-            discordDB.exec(`UPDATE ac SET 'data' = '${JSON.stringify(data)}' WHERE id = ${id};`, (err) => {
+            discordDB.exec(`UPDATE ac SET 'data' = '${JSON.stringify(data)}' WHERE id = ${id}; `, (err) => {
                 if (err) {
                     console.log(err.message)
                     resolve(false)

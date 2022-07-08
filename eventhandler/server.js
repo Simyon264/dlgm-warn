@@ -78,8 +78,41 @@ module.exports = {
                                 }
                                 break;
                             case "updateStat":
-                                f.log(`[NET] [INFO] Update stat: ${formattedData.data.id} :: ${formattedData.data.name} :: ${formattedData.data.value}`)
-                                // Make this
+                                f.log(`[NET] [INFO] Update stat: ${id} :: ${formattedData.data.name} :: ${formattedData.data.value}`)
+                                let newValue = formattedData.data.value
+                                const stat = formattedData.data.name;
+                                let stats = await f.getStats(id)
+                                const curStat = stats[stat]
+                                if (!curStat && !stats) {
+                                    socket.write(JSON.stringify({
+                                        "id": id,
+                                        "type": "error",
+                                        "message": "statNotFound"
+                                    }))
+                                    return;
+                                }
+                                if (newValue.includes("++")) {
+                                    const splitted = newValue.split("++");
+                                    const added = splitted[1]
+                                    if (added) {
+                                        newValue = curStat + parseInt(added)
+                                    }
+                                }
+                                const updateDone = await f.updateStat(id, stat, newValue)
+
+                                if (updateDone) {
+                                    socket.write(JSON.stringify({
+                                        "id": id,
+                                        "type": "statUpdate",
+                                        "updated": true
+                                    }))
+                                } else {
+                                    socket.write(JSON.stringify({
+                                        "id": id,
+                                        "type": "statUpdate",
+                                        "updated": false
+                                    }))
+                                }
                                 break;
                             case "linkCheck":
                                 f.log(`[NET] [INFO] Link checked, id: ${id}`)
