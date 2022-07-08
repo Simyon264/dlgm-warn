@@ -19,7 +19,7 @@ function startChild() {
         }
     });
 
-    let bot = fork('./client.js');
+    let bot = fork('./client.js', process.argv);
 
     bot.on("message", async (message) => {
         switch (message) {
