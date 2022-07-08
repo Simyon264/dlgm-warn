@@ -128,7 +128,7 @@ let convert = false
 let returnBoot = false
 
 // Get args from the command that was used to start the bot
-const args = process.argv.slice(2);
+const args = process.argv.slice(4);
 // Run through every args and execute some code if its a valid args
 const errdelete = true
 for (let index = 0; index < args.length; index++) {
@@ -145,7 +145,7 @@ for (let index = 0; index < args.length; index++) {
         case "createdb":
             createDB = true
             returnBoot = true
-            discordDB.exec('CREATE TABLE "stats" ("id"	TEXT,"cokesDrunk"	INTEGER,"scpItemsUsed"	INTEGER,"pinkCandyKills"	INTEGER,"assists"	INTEGER,"kills"	INTEGER,"alldaylightbits"	INTEGER,"averageSurvivalTime"	INTEGER,"killDeathRatio"	INTEGER,"deaths"	INTEGER,"bulletsShot"	INTEGER,"scpsKilled"	INTEGER,"poopedAs173"	INTEGER,"sacrificed106"	INTEGER,"upgraded914"	INTEGER,"doorsOpened"	INTEGER,"doorsClosed"	INTEGER,"nukesActivated"	INTEGER,"optixKilled"	INTEGER,"gotKilledByOptix"	INTEGER,"bitsspent"	INTEGER,"grenadesThrown"	INTEGER,"chaosSpawns"	INTEGER,"NtfSpawns"	INTEGER,"damage"	INTEGER,"HidDamage"	INTEGER,"itemsUsed"	INTEGER) ', (err) => {
+            discordDB.exec('CREATE TABLE "stats" ( "id"	TEXT, "cokesDrunk"	INTEGER DEFAULT 0, "scpItemsUsed"	INTEGER DEFAULT 0, "pinkCandyKills"	INTEGER DEFAULT 0, "assists"	INTEGER DEFAULT 0, "kills"	INTEGER DEFAULT 0, "alldaylightbits"	INTEGER DEFAULT 0, "killDeathRatio"	INTEGER DEFAULT 0, "deaths"	INTEGER DEFAULT 0, "bulletsShot"	INTEGER DEFAULT 0, "scpsKilled"	INTEGER DEFAULT 0, "poopedAs173"	INTEGER DEFAULT 0, "sacrificed106"	INTEGER DEFAULT 0, "upgraded914"	INTEGER DEFAULT 0, "doorsOpened"	INTEGER DEFAULT 0, "doorsClosed"	INTEGER DEFAULT 0, "nukesActivated"	INTEGER DEFAULT 0, "optixKilled"	INTEGER DEFAULT 0, "gotKilledByOptix"	INTEGER DEFAULT 0, "bitsspent"	INTEGER DEFAULT 0, "grenadesThrown"	INTEGER DEFAULT 0, "chaosSpawns"	INTEGER DEFAULT 0, "NtfSpawns"	INTEGER DEFAULT 0, "damage"	INTEGER DEFAULT 0, "HidDamage"	INTEGER DEFAULT 0, "itemsUsed"	INTEGER DEFAULT 0 )', (err) => {
                 if (err) {
                     console.log(colors.red("ERROR: ") + "Can't create Stats Table.\n" + err.message)
                 } else console.log("Stats Table created.")
