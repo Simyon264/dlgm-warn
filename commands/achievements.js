@@ -36,8 +36,6 @@ module.exports = {
                 achievementsLink = JSON.parse(achievementsLink[0].data)
             }
         }
-        console.log(link)
-        console.log(achievementsLink)
 
         const embed = new discord.MessageEmbed()
             .setTitle("Alle Achievements")
