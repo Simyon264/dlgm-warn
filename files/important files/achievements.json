@@ -7,8 +7,8 @@
     },
     {
         "id": 1,
-        "name": "Tut mir Leid...",
-        "description": "Strib als SCP-096 im rage.",
+        "name": "Corona time",
+        "description": "Infiziere 10 Leute als SCP-049-2 mit SCP-008 in einer Runde.",
         "category": "SCP"
     },
     {
@@ -25,14 +25,14 @@
     },
     {
         "id": 4,
-        "name": "Muss ich alles selber machen?",
-        "description": "Töte als SCP-079 3 Spieler mit einem Teslagate.",
-        "category": "SCP"
+        "name": "Glückspielsucht",
+        "description": "Entkomme 3 mal von Larry's Dimension in einem Leben.",
+        "category": "Menschen"
     },
     {
         "id": 5,
         "name": "'tis but a scratch!",
-        "description": "Überlebe mit unter 2% HP.",
+        "description": "Überlebe mit unter 30 HP.",
         "category": "SCP"
     },
     {
@@ -41,9 +41,6 @@
         "description": "Kacke als SCP-173 10 mal.",
         "category": "SCP"
     },
-
-
-
     {
         "id": 7,
         "name": "Payback!",
@@ -65,7 +62,7 @@
     {
         "id": 10,
         "name": "Sammler",
-        "description": "Besitze folgende Gegenstände im Inventar: Micro HID, 3X Particle Disruptor, SCP-268, SCP-244, SCP-018 und eine 05-Keycard.",
+        "description": "Besitze folgende Gegenstände im Inventar: Micro HID, 3-X Particle Disruptor, SCP-268, SCP-244, SCP-018 und eine 05-Keycard.",
         "category": "Menschen"
     },
     {
@@ -83,12 +80,12 @@
     {
         "id": 13,
         "name": "Destroy, Destroy, DESTROY",
-        "description": "Töte 2 SCP's (049-2 zählt nicht)",
+        "description": "Töte 3 SCP's (049-2 zählt nicht)",
         "category": "Menschen"
     },
     {
         "id": 14,
-        "name": "Beförderung verdient.",
+        "name": "Beförderung verdient",
         "description": "Als Sicherheitspersonal, überlebe mindestens 3 Spawn waves.",
         "category": "Menschen"
     },
@@ -109,17 +106,17 @@
         "name": "Ich habe mein bestes versucht!",
         "description": "Töte mindestens 5 personen, verliere aber trotzdem.",
         "category": "Menschen"
-    }, 
+    },
     {
         "id": 18,
         "name": "Chaos, CHAOS",
         "description": "Als Chaos, töte 20 MTF/NTF in einer Runde.",
         "category": "Menschen"
-    }, 
+    },
     {
         "id": 19,
         "name": "Mobbing",
-        "description": "Töte Peter",
+        "description": "Töte Optix 4 mal in einer Runde.",
         "category": "Alle"
     }
 ]
