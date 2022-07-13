@@ -53,7 +53,8 @@ module.exports = {
                                 socket.write(JSON.stringify({
                                     "id": id,
                                     "type": "giveAchievementResponse",
-                                    "wasGiven": succing
+                                    "wasGiven": succing,
+                                    "acId": achievement.id
                                 }))
                                 break;
                             case "achievementCheck":
@@ -98,6 +99,7 @@ module.exports = {
                                         newValue = curStat + parseInt(added)
                                     }
                                 }
+
                                 const updateDone = await f.updateStat(id, stat, newValue)
 
                                 if (updateDone) {
@@ -113,6 +115,18 @@ module.exports = {
                                         "updated": false
                                     }))
                                 }
+
+                                await f.sleep(1000)
+
+                                // Update all other vars wich rely on other vars
+                                stats = await f.getStats(id)
+                                let deaths = stats.deaths
+                                if (deaths == 0) {
+                                    deaths = 1
+                                }
+                                let calculated = stats.kills / deaths
+                                if (calculated)
+                                    f.updateStat(id, "killDeathRatio", Math.round((calculated + Number.EPSILON) * 100) / 100)
                                 break;
                             case "linkCheck":
                                 f.log(`[NET] [INFO] Link checked, id: ${id}`)
@@ -148,26 +162,37 @@ module.exports = {
                                         return;
                                     }
                                 }
-                                const lenth = links.push({
+
+                                links.push({
                                     "id": id,
                                     "newLength": links.length + 1,
                                     "code": formattedData.data.code,
                                 })
-                                let expireIn = 30
+                                let expireIn = 60
 
                                 socket.write(JSON.stringify({
                                     "id": id,
                                     "type": "linkSuccess",
-                                    "expiresIn": expireIn.toString()
+                                    "expiresIn": expireIn.toString(),
+                                    "code": formattedData.data.code
                                 }))
 
                                 await f.sleep(expireIn * 1000)
 
-                                if (links[lenth - 1]) {
-                                    if (links[lenth - 1].code == formattedData.data.code) {
-                                        links.splice(lenth - 1, 1)
+                                for (let index = 0; index < links.length; index++) {
+                                    const element = links[index];
+                                    if (element.code == formattedData.data.code) {
+                                        links.splice(index, 1)
                                     }
                                 }
+                                break;
+                            case "resetStats":
+                                f.log(`[NET] [INFO] Reset requested: ${id}`)
+                                socket.write(JSON.stringify({
+                                    "id": id,
+                                    "type": "resetStatsResponse",
+                                    "didReset": await f.resetStats(id)
+                                }))
                                 break;
                             default:
                                 socket.write(JSON.stringify({
@@ -184,7 +209,7 @@ module.exports = {
                             "type": "error",
                             "message": "generalError"
                         }))
-                        f.log(`[NET] [ERROR] Error using data:\n${error}`)
+                        f.log(`[NET] [ERROR] Error using data:\n${error}\n${error.stack}`)
                     }
                 } catch (error) {
                     socket.write(JSON.stringify({
