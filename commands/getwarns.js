@@ -19,7 +19,7 @@ module.exports = {
         if (link && f.config().bot.allowLinkedUsersToSeeTheirWarns) {
             if (!args[1]) {
                 allowed = true;
-                steamID = link.idIngame
+                steamID = link.idIngame.split("@")[0].replace(" ", "")
             } else {
                 if (!(args.length >= 2)) return message.reply(f.localization("slashcommands", "getwarns", "noargs"))
                 steamID = args[1].split("@")[0].replace(" ", "")
@@ -31,10 +31,10 @@ module.exports = {
         if (allowed) {
             let sortby = "date"
             if (args[2]) {
-                let validArr = ["newest","oldest","onlyvalid","badonly"]
+                let validArr = ["newest", "oldest", "onlyvalid", "badonly"]
                 if (validArr.some(v => args[2].toLowerCase().includes(v))) {
                     sortby = args[2]
-                } else return message.reply(f.localization("slashcommands", "getwarns", "4options")) 
+                } else return message.reply(f.localization("slashcommands", "getwarns", "4options"))
             }
 
             if (steamID.length == 17 || steamID.length == 18) {
@@ -104,10 +104,10 @@ module.exports = {
                                 let expiredMsg = ""
                                 let extraMsg = ""
                                 let type = ""
-                                
+
                                 if (items[i].type == "steam") type = "@steam"
                                 if (items[i].type == "discord") type = "@discord"
-                                
+
                                 if (items[i].extra) extraMsg = f.localization("slashcommands", "getwarns", "extra", [items[i].extra.toString().trim()])
                                 if (items[i].expired) expiredMsg = f.localization("slashcommands", "getwarns", "expired")
 
