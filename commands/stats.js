@@ -9,7 +9,7 @@ module.exports = {
     modcommand: false,
     usage: f.localization("commands", "stats", "exports").usage,
     perms: '',
-    alias: [],
+    alias: ["stat"],
     cooldown: 1,
     run: async function (message, prefix, args, client) {
         const link = await f.getLink(message.author.id)
@@ -45,7 +45,6 @@ module.exports = {
                 "upgraded914": "914 Upgrades:",
                 "doorsOpened": "Türen Geöffnet:",
                 "doorsClosed": "Türen Geschlossen:",
-                "nukesActivated": "Nukes Angemacht:",
                 "optixKilled": "Optix Getötet:",
                 "gotKilledByOptix": "Von Optix Getötet:",
                 "bitsspent": "DayLight Bits Ausgegeben:",
@@ -62,7 +61,11 @@ module.exports = {
                     const element = stats[key];
                     const current = statTranslations[key]
                     if (current) {
-                        embed.addField(current, element.toString(), true)
+                        if (element) {
+                            embed.addField(current, element.toString().split("@")[0], true)
+                        } else {
+                            embed.addField(current, "0", true)
+                        }
                     }
                 }
             }
