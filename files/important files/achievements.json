@@ -1,0 +1,122 @@
+[
+    {
+        "id": 0,
+        "name": "Meister Doktor",
+        "description": "Habe 10 Zombies gleichzeitig.",
+        "category": "SCP"
+    },
+    {
+        "id": 1,
+        "name": "Corona time",
+        "description": "Infiziere 10 Leute als SCP-049-2 mit SCP-008 in einer Runde.",
+        "category": "SCP"
+    },
+    {
+        "id": 2,
+        "name": "Blackout",
+        "description": "Töte als SCP-173 3 Menschen während eines Blackouts.",
+        "category": "SCP"
+    },
+    {
+        "id": 3,
+        "name": "Pentakill",
+        "description": "Töte 5 Spieler innerhalb von 25 Sekunden.",
+        "category": "SCP"
+    },
+    {
+        "id": 4,
+        "name": "Glückspielsucht",
+        "description": "Entkomme 3 mal von Larry's Dimension in einem Leben.",
+        "category": "Menschen"
+    },
+    {
+        "id": 5,
+        "name": "'tis but a scratch!",
+        "description": "Überlebe mit unter 30 HP.",
+        "category": "SCP"
+    },
+    {
+        "id": 6,
+        "name": "Party pooper.",
+        "description": "Kacke als SCP-173 10 mal.",
+        "category": "SCP"
+    },
+    {
+        "id": 7,
+        "name": "Payback!",
+        "description": "Töte 3 Wissenschaftler als Klasse-D in einer Runde,.",
+        "category": "Menschen"
+    },
+    {
+        "id": 8,
+        "name": "Kaboom!",
+        "description": "Töte 3 Menschen auf einmal mit einem Pinken Candy.",
+        "category": "Menschen"
+    },
+    {
+        "id": 9,
+        "name": "Einer für alle!",
+        "description": "Entkomme als letzter deines Teams.",
+        "category": "Menschen"
+    },
+    {
+        "id": 10,
+        "name": "Sammler",
+        "description": "Besitze folgende Gegenstände im Inventar: Micro HID, 3-X Particle Disruptor, SCP-268, SCP-244, SCP-018 und eine 05-Keycard.",
+        "category": "Menschen"
+    },
+    {
+        "id": 11,
+        "name": "Vielverdiener",
+        "description": "Gib in einer Runde 40.000 DayLight-Bits aus.",
+        "category": "Menschen"
+    },
+    {
+        "id": 12,
+        "name": "Der Helicopter bleibt nicht stehen!",
+        "description": "Entkomme als D-Klasse während MTF spawnt.",
+        "category": "Menschen"
+    },
+    {
+        "id": 13,
+        "name": "Destroy, Destroy, DESTROY",
+        "description": "Töte 3 SCP's (049-2 zählt nicht)",
+        "category": "Menschen"
+    },
+    {
+        "id": 14,
+        "name": "Beförderung verdient",
+        "description": "Als Sicherheitspersonal, überlebe mindestens 3 Spawn waves.",
+        "category": "Menschen"
+    },
+    {
+        "id": 15,
+        "name": "Doom Guy",
+        "description": "Als Chaos, überlebe 2 NTF spawns.",
+        "category": "Menschen"
+    },
+    {
+        "id": 16,
+        "name": "Yes Rico, kaboom!",
+        "description": "Trinke 4 Colas.",
+        "category": "Menschen"
+    },
+    {
+        "id": 17,
+        "name": "Ich habe mein bestes versucht!",
+        "description": "Töte mindestens 5 personen, verliere aber trotzdem.",
+        "category": "Menschen"
+    },
+    {
+        "id": 18,
+        "name": "Chaos, CHAOS",
+        "description": "Als Chaos, töte 20 MTF/NTF in einer Runde.",
+        "category": "Menschen"
+    },
+    {
+        "id": 19,
+        "name": "Mobbing",
+        "description": "Töte Optix 4 mal in einer Runde.",
+        "category": "Alle"
+    }
+]

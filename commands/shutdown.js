@@ -1,8 +1,8 @@
-const functions = require('../functions.js');
+const f = require('../functions.js');
 const discord = require('discord.js');
 
-var colourInfo = functions.config().messageColours.info;
-var colourWarn = functions.config().messageColours.warn;
+var colourInfo = f.config().messageColours.info;
+var colourWarn = f.config().messageColours.warn;
 
 module.exports = {
     name: 'shutdown',
@@ -20,7 +20,7 @@ module.exports = {
                 process.emit('SIGINT')
             });
         } else {
-            functions.embed(message, "Fehler", colourWarn, "Du hast nicht genug Rechte um diesen Befehl auszufüren.")
+            f.embed(message, "Fehler", colourWarn, "Du hast nicht genug Rechte um diesen Befehl auszufüren.")
         }
     }
 }

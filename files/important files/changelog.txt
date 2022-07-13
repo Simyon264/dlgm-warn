@@ -1,5 +1,2 @@
-Version 3.9.0
-- Stop braucht nun die hälfe der Mitglieder im Sprachkanal
-- Skip und Stop zählen jetzt nicht mehr Bots.
-- FSkip hinzugefügt.
-- Bot verlässt jetzt den Sprachkanal wenn keiner mehr drinne ist.
+Version 4.9.0
+- Achievements und stat tracking hinzugefügt.

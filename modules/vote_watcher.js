@@ -17,8 +17,10 @@ module.exports = {
         client.on("messageCreate", async (message) => {
             if (message.channel.id == config.channel_id) {
                 if (config.reactionNegative && config.reactionPositive) {
-                    await message.react(config.reactionPositive)
-                    await message.react(config.reactionNegative)
+                    if (!message.system) {
+                        await message.react(config.reactionPositive)
+                        await message.react(config.reactionNegative)
+                    }
                 }
             }
         })

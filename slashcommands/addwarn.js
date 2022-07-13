@@ -9,9 +9,9 @@ module.exports = {
             const steamID = interaction.options.get('id').value.split("@")[0].replace(" ", "")
             const grund = interaction.options.get('grund').value
             const punkte = interaction.options.get('punkte').value
-            
+
             let extra = interaction.options.get('extra')
-            
+
             if (extra) {
                 extra = interaction.options.get('extra').value
             }
@@ -31,7 +31,7 @@ module.exports = {
                 if (steamID.length == 17) {
                     warns.type = "steam"
                     type = "@steam"
-                } 
+                }
                 if (steamID.length == 18) {
                     warns.type = "discord"
                     type = "@discord"
@@ -41,8 +41,8 @@ module.exports = {
 
                 warns.warnid = parseInt(fs.readFileSync("./files/warns/id.txt", "utf-8")) + 1
                 fs.writeFileSync("./files/warns/id.txt", warns.warnid.toString())
-                
-                await f.addWarn(steamID,warns)
+
+                await f.addWarn(steamID, warns)
 
                 const warn = await f.getWarns(steamID)
 
@@ -52,17 +52,17 @@ module.exports = {
                 let totalPoints = 0
                 for (let index = 0; index < warn.length; index++) {
                     if (warn[index]["createdAt"] < timestamp) {
-                        totalPoints = totalPoints + Math.round(parseFloat(warn[index]["punkte"].toString().replace(",",".")) * 10) / 10
+                        totalPoints = totalPoints + Math.round(parseFloat(warn[index]["punkte"].toString().replace(",", ".")) * 10) / 10
                     } else {
-                        points = points + Math.round(parseFloat(warn[index]["punkte"].toString().replace(",",".")) * 10) / 10
-                        totalPoints = totalPoints + Math.round(parseFloat(warn[index]["punkte"].toString().replace(",",".")) * 10) / 10
+                        points = points + Math.round(parseFloat(warn[index]["punkte"].toString().replace(",", ".")) * 10) / 10
+                        totalPoints = totalPoints + Math.round(parseFloat(warn[index]["punkte"].toString().replace(",", ".")) * 10) / 10
                     }
                 }
 
                 const embed = new discord.MessageEmbed()
                     .setColor(0x00AE86)
                     .setTitle("Neue Verwarnung!")
-                    .setDescription(`Alle Punkte: **${totalPoints}**\nAkutelle Punkte: **${points}**`)
+                    .setDescription(`Alle Punkte: **${totalPoints}**\nAktuelle Punkte: **${points}**`)
                     .addField("❯ Name", `*${name}*`)
                     .addField("❯ ID", `*${steamID}${type}*`)
                     .addField("❯ Grund", `*${grund}*`)
@@ -75,11 +75,11 @@ module.exports = {
 
                 if (interaction.channel.id == f.config().bot.warnchannelID) {
                     interaction.editReply({
-                            embeds: [embed]
+                        embeds: [embed]
                     })
                 } else {
                     await interaction.guild.channels.cache.find(channel => channel.id == f.config().bot.warnchannelID).send({
-                            embeds: [embed]
+                        embeds: [embed]
                     });
                     interaction.editReply("Verwarnung wurde vergeben.")
                 }

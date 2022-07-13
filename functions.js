@@ -8,7 +8,7 @@ const ytpl = require('ytpl');
 const ytsr = require('ytsr');
 const ytdl = require('ytdl-core')
 
-exports.replaceAllCaseInsensitve = function(strReplace, strWith, string) {
+exports.replaceAllCaseInsensitve = function (strReplace, strWith, string) {
     let esc = strReplace.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     let reg = new RegExp(esc, 'ig');
     return string.replace(reg, strWith);
@@ -41,7 +41,7 @@ function formatMilliseconds(milliseconds, padStart) {
  * @returns {boolean}
  * Return :: True: Connection was sucsefull - False: There was an error.
  */
-exports.connect = function(voiceChannel, textChannel, ) {
+exports.connect = async function (voiceChannel, textChannel,) {
     try {
         if (!voiceChannel) return false;
         if (!textChannel) return false;
@@ -67,6 +67,7 @@ exports.connect = function(voiceChannel, textChannel, ) {
             guildId: textChannel.guild.id,
             adapterCreator: textChannel.guild.voiceAdapterCreator,
         })
+
         queue.set(textChannel.guild.id, queueContruct)
         f.handleConnection(voiceChannel.guild)
         return true;
@@ -79,7 +80,7 @@ exports.connect = function(voiceChannel, textChannel, ) {
  *
  * @param {discord.Guild} guild
  */
-exports.handleConnection = function(guild) {
+exports.handleConnection = function (guild) {
     if (!guild) return;
     const connection = voice.getVoiceConnection(guild.id)
     connection.on(voice.VoiceConnectionStatus.Disconnected, async (oldState, newState) => {
@@ -104,7 +105,7 @@ exports.handleConnection = function(guild) {
  * @param {string} query 
  * @param {discord.Message} message 
  */
-exports.addSong = async function(guild, query, message) {
+exports.addSong = async function (guild, query, message) {
     let serverQueue = queue.get(guild.id)
     const botMsg = await message.reply("Suche... :mag:")
     let song = {}
@@ -144,7 +145,7 @@ exports.addSong = async function(guild, query, message) {
                     .addField('Kanal', `[${song.raw.videoDetails.author.name}](${song.raw.videoDetails.author.channel_url})`, true)
                     .setFooter(`Hinzugefügt von: ${song.by.username}`, song.by.avatarURL(true))
                     .setThumbnail(song.raw.videoDetails.thumbnails[song.raw.videoDetails.thumbnails.length - 1].url)
-                message.channel.send({embeds: [embed]})
+                message.channel.send({ embeds: [embed] })
             }
             botMsg.edit(`${playlist.items.length} Lieder hinzugefügt.`)
             return
@@ -198,10 +199,13 @@ exports.addSong = async function(guild, query, message) {
     })
 }
 
-exports.play = function(guild) {
+exports.play = function (guild) {
     let serverQueue = queue.get(guild.id)
     let player = null;
     let connection = voice.getVoiceConnection(guild.id)
+
+    if (serverQueue.voiceChannel.type == "GUILD_STAGE_VOICE") guild.me.voice.setSuppressed(false);
+
     let songInfo = serverQueue.songs[0];
     let justSet = false
     if (serverQueue.player) {
@@ -234,51 +238,58 @@ exports.play = function(guild) {
     queue.set(guild.id, serverQueue)
     if (player && justSet == false) return;
     player.on('stateChange', (oldState, newState) => {
-        if (newState.status == 'idle') {
-            serverQueue = queue.get(guild.id);
-            if (!serverQueue.source) return;
-            if (!serverQueue.source.ended) return f.log("Idle, stream still playing");
-            if (serverQueue.songs.length != 1 || serverQueue.loop != "none") {
-                if (serverQueue.loop == "queue") {
-                    serverQueue.songs.push(serverQueue.songs[0])
-                    serverQueue.songs.splice(0, 1)
+        serverQueue = queue.get(guild.id);
+        try {
+            if (newState.status == 'idle') {
+                if (!serverQueue.source) return;
+                if (!serverQueue.source.ended) return f.log("Idle, stream still playing");
+                if (serverQueue.songs.length != 1 || serverQueue.loop != "none") {
+                    if (serverQueue.loop == "queue") {
+                        serverQueue.songs.push(serverQueue.songs[0])
+                        serverQueue.songs.splice(0, 1)
+                    }
+                    if (serverQueue.loop == "none") serverQueue.songs.splice(0, 1)
+                    const url = serverQueue.songs[0].url
+                    let stream = ytdl(url, {
+                        filter: 'audioonly',
+                        quality: 'highestaudio',
+                        highWaterMark: 1 << 25,
+                    })
+                    let source = voice.createAudioResource(stream, {
+                        inlineVolume: true
+                    })
+                    source.volume?.setVolume(serverQueue.volume / 100)
+                    serverQueue.source = source;
+                    songInfo = serverQueue.songs[0]
+                    serverQueue.player.play(source)
+                    // Generating the embed
+                    const embed = new discord.MessageEmbed()
+                        .setTitle("Spielt gerade:")
+                        .setURL(songInfo.url)
+                        .setColor(0x00AE86)
+                        .setDescription(`**${songInfo.title}**`)
+                        .addField('Kanal', `[${songInfo.raw.videoDetails.author.name}](${songInfo.raw.videoDetails.author.channel_url})`, true)
+                        .addField('Länge', `\`${formatMilliseconds(songInfo.raw.videoDetails.lengthSeconds * 1000)}\``, true)
+                        .setFooter(`Hinzugefügt von: ${songInfo.by.username}`, songInfo.by.avatarURL(true))
+                        .setThumbnail(songInfo.raw.videoDetails.thumbnails[songInfo.raw.videoDetails.thumbnails.length - 1].url)
+                    serverQueue.textChannel.send({
+                        embeds: [embed]
+                    })
+                    serverQueue.skips = 0
+                    serverQueue.skipID = []
+                    serverQueue.stops = 0
+                    serverQueue.stopID = []
+                    queue.set(guild.id, serverQueue)
+                } else {
+                    serverQueue.textChannel.send("Die Songliste ist fertig.")
+                    serverQueue.playing = false;
+                    serverQueue.songs = [];
+                    queue.set(serverQueue.textChannel.guild.id, serverQueue)
                 }
-                if (serverQueue.loop == "none") serverQueue.songs.splice(0, 1)
-                const url = serverQueue.songs[0].url
-                let stream = ytdl(url, {
-                    filter: 'audioonly',
-                    quality: 'highestaudio',
-                    highWaterMark: 1 << 25,
-                })
-                let source = voice.createAudioResource(stream, {
-                    inlineVolume: true
-                })
-                source.volume?.setVolume(serverQueue.volume / 100)
-                serverQueue.source = source;
-                songInfo = serverQueue.songs[0]
-                serverQueue.player.play(source)
-                // Generating the embed
-                const embed = new discord.MessageEmbed()
-                    .setTitle("Spielt gerade:")
-                    .setURL(songInfo.url)
-                    .setColor(0x00AE86)
-                    .setDescription(`**${songInfo.title}**`)
-                    .addField('Kanal', `[${songInfo.raw.videoDetails.author.name}](${songInfo.raw.videoDetails.author.channel_url})`, true)
-                    .addField('Länge', `\`${formatMilliseconds(songInfo.raw.videoDetails.lengthSeconds * 1000)}\``, true)
-                    .setFooter(`Hinzugefügt von: ${songInfo.by.username}`, songInfo.by.avatarURL(true))
-                    .setThumbnail(songInfo.raw.videoDetails.thumbnails[songInfo.raw.videoDetails.thumbnails.length - 1].url)
-                serverQueue.textChannel.send({
-                    embeds: [embed]
-                })
-                serverQueue.skips = 0
-                serverQueue.skipID = []
-                queue.set(guild.id, serverQueue)
-            } else {
-                serverQueue.textChannel.send("Die Songliste ist fertig.")
-                serverQueue.playing = false;
-                serverQueue.songs = [];
-                queue.set(serverQueue.textChannel.guild.id, serverQueue)
             }
+        } catch (error) {
+            serverQueue.textChannel.send({ content: "Ein Fehler ist aufgetreten. Ich habe den Kanal verlassen und die Songliste gestoppt." })
+            f.stop(guild)
         }
     })
 }
@@ -290,7 +301,7 @@ exports.play = function(guild) {
  * Return :: True: Disconnect was sucesful False: There was an error
  */
 
-exports.stop = function(guild) {
+exports.stop = function (guild) {
     try {
         if (!guild) return false;
         const serverQueue = queue.get(guild.id)
@@ -307,7 +318,147 @@ exports.stop = function(guild) {
     }
 }
 
-exports.getWarns = function(id) {
+exports.getAchievements = function (id) {
+    return new Promise((resolve, reject) => {
+        discordDB.serialize(() => {
+            discordDB.all(`SELECT "_rowid_",* FROM "main"."ac" WHERE "id" LIKE "%${id}%" ESCAPE '/'`, (err, row) => {
+                if (err) {
+                    console.error(err)
+                    reject()
+                    return;
+                }
+                resolve(row)
+            })
+        })
+    })
+}
+
+exports.getStats = async function (id) {
+    return new Promise(async (resolve) => {
+        discordDB.serialize(() => {
+            discordDB.all(`SELECT "_rowid_",* FROM "main"."stats" WHERE "id" LIKE '%${id}%' ESCAPE '\\'`, (err, row) => {
+                if (err) {
+                    console.error(err)
+                    resolve([])
+                } else {
+                    if (row[0]) {
+                        resolve(row[0])
+                    } else {
+                        resolve([])
+                    }
+                }
+            })
+        })
+    })
+}
+
+exports.updateStat = async function (id, stat, value, selfcall) {
+    return new Promise(async (resolve) => {
+        discordDB.run(`UPDATE stats SET ${stat} = ? WHERE "id" = "${id}"`, value, async function (err) {
+            if (err) {
+                f.log(`SQL ERROR: ${err.message}\nCOMMAND: UPDATE stats SET ${stat} = 0 WHERE "id" = "${id}"`)
+                resolve(false);
+            }
+            if (this.changes == 0) {
+                const stats = await f.getStats(id);
+                if (stats.length == 0) {
+                    discordDB.exec(`INSERT INTO stats ("id") VALUES('${id}')`, (err) => {
+                        if (err) {
+                            f.log(`SQL ERROR: ${err.message}`)
+                        }
+                    })
+                    if (!selfcall) f.updateStat(id, stat, value, true)
+                }
+                resolve(true);
+            } else {
+                resolve(true);
+            }
+        })
+    })
+}
+
+exports.resetStats = async function (id) {
+    return new Promise(async (resolve) => {
+        discordDB.run(`DELETE FROM stats WHERE "id" = "${id}"`, async function (err) {
+            if (err) {
+                f.log(`SQL ERROR: ${err.message}\nCOMMAND: DELETE FROM stats WHERE "id" = "${id}"`)
+                return resolve(false)
+            }
+        })
+        discordDB.run(`DELETE FROM links WHERE "idIngame" = "${id}"`, async function (err) {
+            if (err) {
+                f.log(`SQL ERROR: ${err.message}\nCOMMAND: DELETE FROM links WHERE "idIngame" = "${id}"`)
+            }
+            return resolve(false)
+        })
+        discordDB.run(`DELETE FROM ac WHERE "id" = "${id}"`, async function (err) {
+            if (err) {
+                f.log(`SQL ERROR: ${err.message}\nCOMMAND: DELETE FROM links WHERE "idIngame" = "${id}"`)
+            }
+            return resolve(false)
+        })
+        return resolve(true)
+    })
+}
+
+exports.addAchievement = async function (id, acId) {
+    return new Promise(async (resolve) => {
+        let achievements = await f.getAchievements(id)
+        if (achievements.length !== 0 && achievements[0].data) {
+            if (JSON.parse(achievements[0].data).includes(acId)) {
+                resolve(false);
+                return;
+            }
+        }
+        if (achievements.length == 0) {
+            discordDB.exec(`INSERT INTO "main"."ac"("id", "data") VALUES('${id}', '[${acId}]'); `, (err) => {
+                if (err) {
+                    console.log(err.message)
+                    resolve(false)
+                    return;
+                } else resolve(true)
+            })
+        } else {
+            let data = JSON.parse(achievements[0].data)
+            data.push(acId)
+            discordDB.exec(`UPDATE ac SET 'data' = '${JSON.stringify(data)}' WHERE id = '${id}'; `, (err) => {
+                if (err) {
+                    console.log(err.message)
+                    resolve(false)
+                    return
+                } else resolve(true)
+            })
+        }
+    })
+}
+
+exports.getAchievement = function (id) {
+    let achievments = JSON.parse(fs.readFileSync("./files/important files/achievements.json"))
+    let returnValue
+    achievments.forEach(element => {
+        if (element.id == parseInt(id)) {
+            returnValue = element
+        }
+    });
+    return returnValue
+}
+
+exports.getLink = function (id) {
+    return new Promise((resolve, reject) => {
+        discordDB.serialize(() => {
+            discordDB.all(`SELECT "_rowid_",* FROM "main"."links" WHERE "idDiscord" LIKE '%${id}%' ESCAPE '/'`, (err, row) => {
+                if (err) {
+                    console.error(err)
+                    reject()
+                    return
+                }
+                resolve(row[0])
+            });
+        })
+    })
+}
+
+exports.getWarns = function (id) {
     return new Promise((resolve, reject) => {
         db.serialize(() => {
             db.all(`SELECT \"_rowid_\",* FROM \"main\".\"warns\" WHERE \"id\" LIKE '%${id}%' ESCAPE '/'`, (err, row) => {
@@ -323,7 +474,7 @@ exports.getWarns = function(id) {
     })
 }
 
-exports.search = function(search) {
+exports.search = function (search) {
     return new Promise((resolve, reject) => {
         db.serialize(() => {
             db.all(`SELECT \"_rowid_\",* FROM \"main\".\"warns\" WHERE \"name\" LIKE '%${search}%' ESCAPE '/'`, (err, row) => {
@@ -339,7 +490,7 @@ exports.search = function(search) {
     })
 }
 
-exports.getWarn = function(warnid) {
+exports.getWarn = function (warnid) {
     return new Promise((resolve, reject) => {
         db.serialize(() => {
             db.get('SELECT id id,warnid warnid,name name,grund grund,punkte punkte, createdAt createdAt, by by, byName byName, type type, extra extra FROM warns WHERE warnid = ?', [warnid], (err, row) => {
@@ -355,7 +506,7 @@ exports.getWarn = function(warnid) {
     })
 }
 
-exports.addWarn = function(steamID, warnConent) {
+exports.addWarn = function (steamID, warnConent) {
     return new Promise((resolve, reject) => {
         f.log(`ADDING ID: ${warnConent.warnid}`)
         f.log(`REASON: ${warnConent.grund}`)
@@ -383,7 +534,7 @@ exports.addWarn = function(steamID, warnConent) {
 
 
 
-exports.localization = function(category, string, translationString, args) {
+exports.localization = function (category, string, translationString, args) {
     const lang = f.config().bot.lang
     const localization = require(`./files/strings/${lang}_lang.json`)
     try {
@@ -431,7 +582,7 @@ exports.localization = function(category, string, translationString, args) {
     }
 }
 
-exports.config = function(config) {
+exports.config = function (config) {
     try {
         return (JSON.parse(fs.readFileSync("./files/important files/config.json")))
     } catch {
@@ -440,7 +591,7 @@ exports.config = function(config) {
     }
 }
 
-exports.execute = function(command, message, client, prefix, args) {
+exports.execute = function (command, message, client, prefix, args) {
     try {
         const commandFile = require(`./commands/${command}.js`) // Get the command file
         f.log(`Command execution reqeusted. Command: ${commandFile['name']}`)
@@ -461,10 +612,10 @@ exports.execute = function(command, message, client, prefix, args) {
         };
     }
 }
-exports.sleep = function(ms) {
+exports.sleep = function (ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-exports.embed = function(channel, title, colour, message, returnEmbedOnly) {
+exports.embed = function (channel, title, colour, message, returnEmbedOnly) {
     if (!returnEmbedOnly) {
         const embed = new discord.MessageEmbed()
             .setTitle(title)
@@ -482,7 +633,7 @@ exports.embed = function(channel, title, colour, message, returnEmbedOnly) {
     }
 }
 
-exports.error = function(err, customFileName, sendConsoleLog) {
+exports.error = function (err, customFileName, sendConsoleLog) {
     try {
         let error = `\n${err.code}\n\n${err.stack}` // Get the error and the error stacktrace
         let date = new Date() // The date when the error occured
@@ -499,7 +650,7 @@ exports.error = function(err, customFileName, sendConsoleLog) {
     }
 }
 
-exports.log = function(log, customStackNum, override, msgOverride) {
+exports.log = function (log, customStackNum, override, msgOverride) {
     let stackNum = 2
     if (customStackNum) stackNum = customStackNum;
     let lineNumber = new Error().stack.split("at ")[stackNum].trim()
@@ -519,7 +670,7 @@ exports.log = function(log, customStackNum, override, msgOverride) {
     }
 }
 
-exports.getServerConfig = function(guildID) {
+exports.getServerConfig = function (guildID) {
     try {
         let file = JSON.parse(fs.readFileSync(`./files/serverConfigs/${guildID}.json`))
         return file;
@@ -528,6 +679,6 @@ exports.getServerConfig = function(guildID) {
     }
 }
 
-exports.randomInt = function(min, max) {
+exports.randomInt = function (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
