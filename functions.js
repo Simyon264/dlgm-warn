@@ -321,7 +321,7 @@ exports.stop = function (guild) {
 exports.getAchievements = function (id) {
     return new Promise((resolve, reject) => {
         discordDB.serialize(() => {
-            discordDB.all(`SELECT "_rowid_",* FROM "main"."ac" WHERE "id" LIKE '%${id}%' ESCAPE '/'`, (err, row) => {
+            discordDB.all(`SELECT "_rowid_",* FROM "main"."ac" WHERE "id" LIKE "%${id}%" ESCAPE '/'`, (err, row) => {
                 if (err) {
                     console.error(err)
                     reject()
@@ -354,9 +354,9 @@ exports.getStats = async function (id) {
 
 exports.updateStat = async function (id, stat, value, selfcall) {
     return new Promise(async (resolve) => {
-        discordDB.run(`UPDATE stats SET ${stat} = ? WHERE "id" = ${id}`, value, async function (err) {
+        discordDB.run(`UPDATE stats SET ${stat} = ? WHERE "id" = "${id}"`, value, async function (err) {
             if (err) {
-                f.log(`SQL ERROR: ${err.message}\nCOMMAND: UPDATE stats SET ${stat} = ${value} WHERE "id" = ${id}`)
+                f.log(`SQL ERROR: ${err.message}\nCOMMAND: UPDATE stats SET ${stat} = 0 WHERE "id" = "${id}"`)
                 resolve(false);
             }
             if (this.changes == 0) {
@@ -374,6 +374,30 @@ exports.updateStat = async function (id, stat, value, selfcall) {
                 resolve(true);
             }
         })
+    })
+}
+
+exports.resetStats = async function (id) {
+    return new Promise(async (resolve) => {
+        discordDB.run(`DELETE FROM stats WHERE "id" = "${id}"`, async function (err) {
+            if (err) {
+                f.log(`SQL ERROR: ${err.message}\nCOMMAND: DELETE FROM stats WHERE "id" = "${id}"`)
+                return resolve(false)
+            }
+        })
+        discordDB.run(`DELETE FROM links WHERE "idIngame" = "${id}"`, async function (err) {
+            if (err) {
+                f.log(`SQL ERROR: ${err.message}\nCOMMAND: DELETE FROM links WHERE "idIngame" = "${id}"`)
+            }
+            return resolve(false)
+        })
+        discordDB.run(`DELETE FROM ac WHERE "id" = "${id}"`, async function (err) {
+            if (err) {
+                f.log(`SQL ERROR: ${err.message}\nCOMMAND: DELETE FROM links WHERE "idIngame" = "${id}"`)
+            }
+            return resolve(false)
+        })
+        return resolve(true)
     })
 }
 
@@ -397,7 +421,7 @@ exports.addAchievement = async function (id, acId) {
         } else {
             let data = JSON.parse(achievements[0].data)
             data.push(acId)
-            discordDB.exec(`UPDATE ac SET 'data' = '${JSON.stringify(data)}' WHERE id = ${id}; `, (err) => {
+            discordDB.exec(`UPDATE ac SET 'data' = '${JSON.stringify(data)}' WHERE id = '${id}'; `, (err) => {
                 if (err) {
                     console.log(err.message)
                     resolve(false)
@@ -412,7 +436,7 @@ exports.getAchievement = function (id) {
     let achievments = JSON.parse(fs.readFileSync("./files/important files/achievements.json"))
     let returnValue
     achievments.forEach(element => {
-        if (element.id == id) {
+        if (element.id == parseInt(id)) {
             returnValue = element
         }
     });
