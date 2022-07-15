@@ -1,2 +1,2 @@
-Version 4.9.0
-- Achievements und stat tracking hinzugefügt.
+Version 4.9.1
+- Achievements command und stats command kann nun mit steam id genutzt werden
