@@ -401,6 +401,25 @@ exports.resetStats = async function (id) {
     })
 }
 
+/**
+ * 
+ * @param {String} id
+ */
+exports.getSteamInfo = async function (id) {
+    return new Promise(async (resolve) => {
+        fetch(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${f.config().bot.steamApiKey}&format=json&steamids=${id}`)
+            .then(res => res.json())
+            .then((text) => {
+                if (text.response.players.length == 0) {
+                    return resolve({ wasFound: false })
+                }
+                let response = text.response.players[0]
+                response.wasFound = true
+                resolve(response);
+            })
+    })
+}
+
 exports.addAchievement = async function (id, acId) {
     return new Promise(async (resolve) => {
         let achievements = await f.getAchievements(id)
