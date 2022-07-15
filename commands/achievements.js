@@ -22,6 +22,7 @@ module.exports = {
             }
         }
 
+
         const achievements = JSON.parse(fs.readFileSync("./files/important files/achievements.json"))
 
         const maxItemsForPage = 5
@@ -29,6 +30,20 @@ module.exports = {
         if (page > maxpages) page = maxpages;
 
         const link = await f.getLink(message.author.id)
+
+        let response;
+        let wasId = false;
+        if (args[2]) {
+            wasId = true;
+            const id = args[2].split("@")[0]
+            response = await f.getSteamInfo(id)
+            link.idIngame = response.steamid
+        }
+
+        if (!response.wasFound) {
+            return message.reply("Nutzer nicht gefunden.")
+        }
+
         let achievementsLink = []
         if (link) {
             achievementsLink = await f.getAchievements(link.idIngame)
@@ -41,7 +56,9 @@ module.exports = {
             .setTitle("Alle Achievements")
             .setColor("RANDOM")
             .setFooter({ text: `${achievements.length} Achievements insgesammt. Seite ${page} von ${maxpages}` })
-
+        if (wasId) {
+            embed.setThumbnail(response.avatarfull)
+        }
         let items = 0
         let count = maxItemsForPage * (page - 1)
         for (let index = 0; index < achievements.length; index++) {
@@ -50,7 +67,11 @@ module.exports = {
                     items++
                     const element = achievements[index];
                     if (achievementsLink.includes(element.id)) {
-                        embed.addField(element.name, `Beschreibung: ${element.description}\nKategorie: ${element.category}\nID: ${element.id}\n**Du hast dieses Achievement.**\n`)
+                        if (wasId) {
+                            embed.addField(element.name, `Beschreibung: ${element.description}\nKategorie: ${element.category}\nID: ${element.id}\n**${response.personaname} hat dieses Achievement.**\n`)
+                        } else {
+                            embed.addField(element.name, `Beschreibung: ${element.description}\nKategorie: ${element.category}\nID: ${element.id}\n**Du hast dieses Achievement.**\n`)
+                        }
                     } else {
                         embed.addField(element.name, `Beschreibung: ${element.description}\nKategorie: ${element.category}\nID: ${element.id}\n`)
                     }

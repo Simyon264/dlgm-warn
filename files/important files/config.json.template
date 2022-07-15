@@ -5,6 +5,7 @@
     "slashcommandServerId": "<id here>",
     "lang": "de",
     "feedbackChannelId": "<id here>",
+    "steamApiKey": "<key here>",
     "warnchannelID": "<id here>",
     "warnRoleId": "<id here>",
     "allowLinkedUsersToSeeTheirWarns": true,

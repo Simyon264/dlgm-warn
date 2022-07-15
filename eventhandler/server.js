@@ -36,7 +36,7 @@ module.exports = {
                 try {
                     let formattedData = JSON.parse(data)
                     f.log(`[NET] [DATA]\n${JSON.stringify(formattedData, null, 4)}`)
-                    console.log(formattedData)
+                    // console.log(formattedData)
                     try {
                         const id = formattedData.id
                         let achievement

@@ -12,8 +12,21 @@ module.exports = {
     alias: ["stat"],
     cooldown: 1,
     run: async function (message, prefix, args, client) {
-        const link = await f.getLink(message.author.id)
+        let link = await f.getLink(message.author.id)
         if (link) {
+            let wasId = false;
+            let response
+            if (args.length == 2) {
+                wasId = true;
+                const id = args[1].split("@")[0]
+                response = await f.getSteamInfo(id)
+                link.idIngame = response.steamid
+            }
+
+            if (!response || !response.wasFound) {
+                return message.reply("Nutzer nicht gefunden.")
+            }
+
             const maxAchievements = JSON.parse(fs.readFileSync("./files/important files/achievements.json")).length
             let achievements = await f.getAchievements(link.idIngame)
             if (achievements.length !== 0) {
@@ -27,6 +40,11 @@ module.exports = {
                 .setColor("RANDOM")
                 .setThumbnail(message.author.avatarURL({ dynamic: true }))
                 .addField("Achievements", `${achievements.length} von ${maxAchievements}`);
+
+            if (wasId) {
+                embed.setThumbnail(response.avatarfull)
+                    .setTitle(`${response.personaname}'s Stats`)
+            }
 
             const statTranslations = {
                 "id": "ID",
