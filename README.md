@@ -1,6 +1,6 @@
 # DLGM-Warnbot
 
-Join the [Discord](https://discord.gg/PAPf95aQPp)
+Join the [Discord](https://discord.gg/RxzaN3jGeb)
 
 Warn-bot for DLGM.
 
@@ -31,3 +31,184 @@ To enable one of these just have it in the args when starting the bot. So:
 `node bot.js [launch options]`
 These have to be seperated by spaces. So if we would want to disable colour and have all debug output put into the console we would do:
 `node bot.js nocolour debug`
+
+
+# Networking: Bot responses
+
+## General
+
+```json
+{
+	"type": "error",
+	"message": "invalidData"
+}
+```
+This gets send when invalid data is send to the server.
+
+```json
+{
+	"id": "123",
+	"type": "error",
+	"message": "generalError"
+}
+```
+This gets sent when an error occures with the reqeust.
+```json
+{
+	"id": "123",
+	"type": "error",
+	"message": "typeUnknown"
+}
+```
+This gets sent when the data type is unknown. 
+
+## AchievementCheck
+```json
+{
+	"id":"123",
+	"type": "achievement",
+	"name": "yes?",
+	"achievementId": 0,
+	"description": "yes"
+}
+```
+This gets sent as a response to a AchievementCheck. When none is found achievementId will be -1
+## GiveAchievement
+```json
+{
+	"id": "123",
+	"type": "giveAchievementResponse",
+	"wasGiven": true,
+	"acId": 0
+}
+```
+## Link
+
+```json
+{
+	"id": "123",
+	"type": "error",
+	"message": "codeNotNew"
+}
+```
+This happens when a code gets send for linking which is already in use.
+
+```json
+{
+	"id": "123",
+	"type": "error",
+	"message": "noCode"
+}
+```
+This gets sent when no code is given.
+```json
+{
+	"id": "123",
+	"type": "linkSuccess",
+	"expiresIn": "seconds",
+	"code": "code"
+}
+```
+This gets sent when a link was registered. 
+
+```json
+{
+	"id": "123",
+	"type": "linkCheckResponse",
+	"isFound": true/false
+}
+```
+Response for if a link is in progress.
+
+## updateStat
+```json
+{
+	"id": "123",
+	"type": "error",
+	"message": "statNotFound"
+}
+```
+This gets sent when the stat is not found or if the user doesn't have stats.
+```json
+{
+	"id": "123",
+	"type": "statUpdate",
+	"updated": true
+}
+```
+This gets sent when a stat was updated.
+
+## resetStats
+```json
+{
+	"id": "123",
+	"type": "resetStatsResponse",
+	"didReset": true
+}
+```
+If a stat reset worked.
+
+# Networking: What you can send to the bot
+
+```json
+{
+	"id": "123",
+	"type": "link",
+	"data": {
+		"code": "abc123"
+	}
+}
+```
+This starts the linking process.
+
+```json
+{
+	"id": "123",
+	"type": "linkCheck",
+	"data": {}
+}
+```
+Check if there is linking active for an ID.
+
+
+```json
+{
+	"id": "123",
+	"type": "achievementCheck",
+	"data": {	
+		"id": 0
+	}
+}
+```
+Gives you info for an achievement.
+
+```json
+{
+	"id": "123",
+	"type": "giveAchievement",
+	"data": {
+		"achievementId": 0
+	}
+}
+```
+Gives an ID a achievement
+
+```json
+{
+	"id": "123",
+	"type": "updateStat",
+	"data": {
+		"name": "statname",
+		"value": "++1"
+	}
+}
+```
+Adds to a user stat. ++Value means it should add NOT set it.
+```json
+{
+	"id": "123",
+	"type": "resetStats",
+	"data": {}
+}
+```
+Reset all stats for an ID.
