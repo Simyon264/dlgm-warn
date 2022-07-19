@@ -23,7 +23,7 @@ module.exports = {
                 link.idIngame = response.steamid
             }
 
-            if (!response || !response.wasFound) {
+            if ((!response || !response.wasFound) && args[2]) {
                 return message.reply("Nutzer nicht gefunden.")
             }
 
