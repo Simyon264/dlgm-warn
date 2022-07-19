@@ -35,7 +35,7 @@ module.exports = {
             socket.on('data', async (data) => {
                 try {
                     let formattedData = JSON.parse(data)
-                    f.log(`[NET] [DATA]\n${JSON.stringify(formattedData, null, 4)}`)
+                    //f.log(`[NET] [DATA]\n${JSON.stringify(formattedData, null, 4)}`)
                     // console.log(formattedData)
                     try {
                         const id = formattedData.id
@@ -79,7 +79,7 @@ module.exports = {
                                 }
                                 break;
                             case "updateStat":
-                                f.log(`[NET] [INFO] Update stat: ${id} :: ${formattedData.data.name} :: ${formattedData.data.value}`)
+                                //f.log(`[NET] [INFO] Update stat: ${id} :: ${formattedData.data.name} :: ${formattedData.data.value}`)
                                 let newValue = formattedData.data.value
                                 const stat = formattedData.data.name;
                                 let stats = await f.getStats(id)
