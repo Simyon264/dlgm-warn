@@ -116,7 +116,37 @@
     {
         "id": 19,
         "name": "Mobbing",
-        "description": "Töte Optix 4 mal in einer Runde.",
+        "description": "Töte Optix 3 mal in einer Runde.",
         "category": "Alle"
+    },
+    {
+        "id": 20,
+        "name": "Overcharge!",
+        "description": "Erreiche als 079 Level 5 in 10 Minuten.",
+        "category": "SCP"
+    },
+    {
+        "id": 21,
+        "name": "Ich liebe dich papa",
+        "description": "Überlebe 3 Spawnwellen als 049-2.",
+        "category": "SCP"
+    },
+    {
+        "id": 22,
+        "name": "UNO reverse card",
+        "description": "Als 106, bring jemanden in deine Pocket Dimension.",
+        "category": "SCP"
+    },
+    {
+        "id": 23,
+        "name": "Ich gehe kurz Milch hohlen",
+        "description": "Als 049, belebe jemanden wieder und sterbe dann inerhalb von 10 Sekunden.",
+        "category": "SCP"
+    },
+    {
+        "id": 24,
+        "name": "Junkie",
+        "description": "Nehme 10 Pillen in einer Runde.",
+        "category": "Menschen"
     }
 ]
