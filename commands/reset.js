@@ -3,13 +3,13 @@ const discord = require('discord.js');
 const fs = require("fs")
 
 module.exports = {
-    name: 'stats',
+    name: 'reset',
     description: f.localization("commands", "stats", "exports").description,
     category: 'general',
     modcommand: false,
     usage: f.localization("commands", "stats", "exports").usage,
     perms: '',
-    alias: ["stat"],
+    alias: [],
     cooldown: 1,
     run: async function (message, prefix, args, client) {
         const link = await f.getLink(message.author.id)

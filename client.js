@@ -141,6 +141,11 @@ for (let index = 0; index < args.length; index++) {
                     console.log(colors.red("ERROR: ") + "Can't reset Warn Table.\n" + err.message)
                 }
             })
+            discordDB.exec('DROP TABLE "main"."stats";DROP TABLE "main"."ac";DROP TABLE "main"."links";;', (err) => {
+                if (err) {
+                    console.log(colors.red("ERROR: ") + "Can't reset Discord Table.\n" + err.message)
+                }
+            })
             break;
         case "createdb":
             createDB = true
@@ -390,6 +395,9 @@ async function exit(code) {
             return console.error(err.message)
         }
     })
+
+    close();
+
     client.destroy()
     doTick()
     await f.sleep(1000)

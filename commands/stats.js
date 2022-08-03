@@ -11,6 +11,11 @@ module.exports = {
     perms: '',
     alias: ["stat"],
     cooldown: 1,
+    /**
+     * @param {discord.Message} message 
+     * @param {string} args
+     * @param {discord.Client} client
+    */
     run: async function (message, prefix, args, client) {
         let link = await f.getLink(message.author.id)
         if (link) {
@@ -21,10 +26,18 @@ module.exports = {
                 const id = args[1].split("@")[0]
                 response = await f.getSteamInfo(id)
                 link.idIngame = response.steamid
-            }
-
-            if (!response || !response.wasFound) {
-                return message.reply("Nutzer nicht gefunden.")
+                if ((!response || !response.wasFound)) {
+                    let user = message.mentions.users.first()
+                    if (user) {
+                        link = await f.getLink(user.id)
+                        if (!link) {
+                            return message.reply("Dieser Nutzer hat noch keinen Link!")
+                        }
+                        response = await f.getSteamInfo(link.idIngame)
+                    } else {
+                        return message.reply("Nutzer nicht gefunden.")
+                    }
+                }
             }
 
             const maxAchievements = JSON.parse(fs.readFileSync("./files/important files/achievements.json")).length

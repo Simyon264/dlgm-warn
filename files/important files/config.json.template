@@ -20,6 +20,7 @@
 		"logChannelId": ""
   },
   "special": {
+    "netdebug": false,
     "owners": [
       ""
     ],

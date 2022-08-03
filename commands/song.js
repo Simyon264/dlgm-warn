@@ -1,16 +1,16 @@
 const f = require('../functions.js');
 const discord = require('discord.js');
 const fs = require("fs")
-const fetch = require('node-fetch')
+
 module.exports = {
-	name: 'song',
-	description: f.localization("commands","song","exports").description,
-	category: 'music',
-	modcommand: false,
-	usage: f.localization("commands","song","exports").usage,
-	perms: '',
-	alias: ["si"],
-	cooldown: 1,
+    name: 'song',
+    description: f.localization("commands", "song", "exports").description,
+    category: 'music',
+    modcommand: false,
+    usage: f.localization("commands", "song", "exports").usage,
+    perms: '',
+    alias: ["si"],
+    cooldown: 1,
     run: function (message, prefix, args, client) {
         const serverQueue = queue.get(message.channel.guild.id);
         const channel = message.member.voice.channel
@@ -53,7 +53,7 @@ module.exports = {
                     .addField('Likes und dislikes', `${data.likes} :thumbsup: ${data.dislikes} :thumbsdown: `, true)
                     .setFooter(`Hinzugefügt von: ${songInfo.by.username}`, songInfo.by.avatarURL(true))
                     .setThumbnail(songInfo.raw.videoDetails.thumbnails[songInfo.raw.videoDetails.thumbnails.length - 1].url)
-                message.reply({content: "** **", embeds:[embed]})
+                message.reply({ content: "** **", embeds: [embed] })
             });
-	}
+    }
 }

@@ -2,15 +2,23 @@ const tcpServer = require('net').createServer();
 const f = require("../functions.js")
 const colors = require('colours')
 
+const ipAddress = '127.0.0.1';
+const port = 6969;
+const keepAliveDuration = 2000
+let sockets = []
+
 module.exports = {
     run: function (client) {
-        const ipAddress = '127.0.0.1';
-        const port = 6969;
-        const keepAliveDuration = 2000
-        let sockets = []
-
         console.log(colors.blue(`Starting server at ${ipAddress}:${port}...`));
         f.log(`Starting server at ${ipAddress}:${port}`)
+
+        global.close = function () {
+            sockets.forEach(element => {
+                element.destroy();
+            });
+            tcpServer.close();
+            console.log(colors.blue(`Server closed.`));
+        }
 
         tcpServer.listen(port, ipAddress);
 
@@ -27,6 +35,7 @@ module.exports = {
         tcpServer.on('connection', socket => {
             socket.setEncoding('UTF-8');
             socket.setKeepAlive(true, keepAliveDuration);
+            socket.id = f.randomInt(0, 1000000); // Generate a random ID for the socket. The ID is used to identify the socket in the array. However, the ID can be a duplicate of another socket id.
 
             sockets.push(socket);
 
@@ -35,8 +44,9 @@ module.exports = {
             socket.on('data', async (data) => {
                 try {
                     let formattedData = JSON.parse(data)
-                    f.log(`[NET] [DATA]\n${JSON.stringify(formattedData, null, 4)}`)
-                    // console.log(formattedData)
+                    if (f.config().special.netdebug) {
+                        f.log(`[NET] [DATA]\n${JSON.stringify(formattedData, null, 4)}`)
+                    }
                     try {
                         const id = formattedData.id
                         let achievement
@@ -79,7 +89,7 @@ module.exports = {
                                 }
                                 break;
                             case "updateStat":
-                                f.log(`[NET] [INFO] Update stat: ${id} :: ${formattedData.data.name} :: ${formattedData.data.value}`)
+                                //f.log(`[NET] [INFO] Update stat: ${id} :: ${formattedData.data.name} :: ${formattedData.data.value}`)
                                 let newValue = formattedData.data.value
                                 const stat = formattedData.data.name;
                                 let stats = await f.getStats(id)
@@ -194,13 +204,28 @@ module.exports = {
                                     "didReset": await f.resetStats(id)
                                 }))
                                 break;
+                            case "sendAll":
+                                f.log("[NET] [INFO] Send all requested: " + JSON.stringify(formattedData.data.data))
+                                sentAmount = 0
+                                sockets.forEach(element => {
+                                    if (element.id != socket.id) {
+                                        element.write(JSON.stringify(formattedData.data.data))
+                                        sentAmount++;
+                                    }
+                                });
+                                socket.write(JSON.stringify({
+                                    "id": id,
+                                    "type": "sendAllResponse",
+                                    "amount": sentAmount
+                                }))
+                                break;
                             default:
                                 socket.write(JSON.stringify({
                                     "id": id,
                                     "type": "error",
                                     "message": "typeUnknown"
                                 }))
-                                f.log(`[NET] [ERROR] Unkown data type:\n${formattedData}`)
+                                f.log(`[NET] [ERROR] Unknown data type:\n${JSON.stringify(formattedData, null, 4)}`)
                                 break;
                         }
                     } catch (error) {
