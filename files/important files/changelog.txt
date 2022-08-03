@@ -1,2 +1,4 @@
-Version 4.9.1
-- Achievements command und stats command kann nun mit steam id genutzt werden
+Version 4.9.2
+- Achievements command und stats command kann nun mit steam id genutzt werden.
+- Stat ist nun nicht mehr reset command.
+- 5 neue Achievements.
